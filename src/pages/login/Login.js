@@ -32,7 +32,7 @@ export default class Login extends React.Component {
 
     const data = {
       attributes: {
-        username: this.state.username,
+        username: this.state.username.toLowerCase(),
         password: this.state.password,
       }
     };
