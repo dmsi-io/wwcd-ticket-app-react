@@ -1,0 +1,21 @@
+@import '~@dmsi/wedgekit/dist/variables';
+
+.login {
+  width: 85%;
+  margin: 8rem auto 0;
+}
+
+.login .cardBody {
+  padding: 24px 0;
+  box-sizing: border-box;
+
+  h2 {
+    font-weight: 700;
+    color: $blue;
+  }
+}
+
+.cardFooter {
+  display: flex;
+  justify-content: flex-end;
+}
