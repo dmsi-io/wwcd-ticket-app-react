@@ -11,6 +11,7 @@ import {
 
 import storage from './utils/storage';
 import history from './utils/history';
+import api from './utils/api';
 
 import {
   Prizes,
@@ -37,6 +38,24 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => (
 );
 
 class App extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      categories: [],
+      prizes: [],
+    };
+  }
+
+  componentDidMount() {
+    api.get('/categories').then(([err, {data}]) => {
+      this.setState({categories: data});
+    });
+    api.get('/prizes').then(([err, { data }]) => {
+      this.setState({ prizes: data });
+    });
+  }
+
   render() {
     return (
       <Router history={history}>
@@ -48,10 +67,50 @@ class App extends React.Component {
           <div className="content">
             <Switch>
               <Route path="/login" exact component={Login} />
-              <PrivateRoute path="/prizes/categories" exact component={Prizes} />
-              <PrivateRoute path="/prizes" exact component={Prizes} />
-              <PrivateRoute path="/prizes/me" exact component={Prizes} />
-              <PrivateRoute path="/prizes/categories/:id?" exact component={Prizes} />
+              <PrivateRoute
+                path="/prizes/categories"
+                exact
+                component={(props) => (
+                  <Prizes
+                    {...props}
+                    categories={this.state.categories}
+                    prizes={this.state.prizes}
+                  />
+                )}
+              />
+              <PrivateRoute
+                path="/prizes"
+                exact
+                component={(props) => (
+                  <Prizes
+                    {...props}
+                    categories={this.state.categories}
+                    prizes={this.state.prizes}
+                  />
+                )}
+              />
+              <PrivateRoute
+                path="/prizes/me"
+                exact
+                component={(props) => (
+                  <Prizes
+                    {...props}
+                    categories={this.state.categories}
+                    prizes={this.state.prizes}
+                  />
+                )}
+              />
+              <PrivateRoute
+                path="/prizes/categories/:id?"
+                exact
+                component={(props) => (
+                  <Prizes
+                    {...props}
+                    categories={this.state.categories}
+                    prizes={this.state.prizes}
+                  />
+                )}
+              />
               <Route render={() => (<Redirect to={{ pathname: '/prizes/categories' }} />)} />
             </Switch>
           </div>
