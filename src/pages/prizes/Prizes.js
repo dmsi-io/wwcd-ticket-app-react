@@ -7,25 +7,14 @@ import {
 import api from '../../utils/api';
 import history from '../../utils/history';
 import Categories from './categories';
-import categoryData from './categories/data';
+import Card from '../../components/card';
 
 import './Prizes.scss';
 
 export default class Prizes extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      data: [],
-    };
-  }
-
   componentDidMount() {
-    api.get('/prizes').then((data) => {
-      console.log(data);
-    });
     api.get('/users/me/prizes', true).then((data) => {
-      console.log(data);
+      // console.log(data);
     });
   }
 
@@ -53,25 +42,59 @@ export default class Prizes extends React.Component {
           id="/prizes/categories"
         >
           <div>
-            <div className="categories-header">
-              {
-                id ?
-                  <h2>{categoryData[id].title}</h2> :
-                  <h2>All Categories</h2>
-              }
-              <div className="spacer" />
-            </div>
-            <Categories
-              categoryOpen={Boolean(id)}
-              onClick={this.openCategory}
-            />
+            {
+              this.props.categories.length > 0 &&
+              <div className="categories-header">
+                {
+                  id ?
+                    <h2>{this.props.categories.find((c) => c.id === id).attributes.name}</h2> :
+                    <h2>All Categories</h2>
+                }
+                <div className="spacer" />
+              </div>
+            }
+            {
+              id ?
+                <div className="card-container">
+                  {
+                    this.props.prizes
+                      .filter((prize) => prize.attributes.category === id)
+                      .map((prize) => (
+                        <Card
+                          key={prize.id}
+                          title={prize.attributes.title}
+                          alt={prize.attributes.title}
+                          image={prize.attributes.image}
+                          onClick={() => {
+                          }}
+                        />
+                      ))
+                  }
+                </div>:
+                <Categories
+                  categories={this.props.categories}
+                  onClick={this.openCategory}
+                />
+            }
           </div>
         </Tab>
         <Tab
           label="All Prizes"
           id="/prizes"
         >
-          <p>Hello</p>
+          <div className="card-container">
+            {
+              this.props.prizes.map((prize) => (
+                <Card
+                  key={prize.id}
+                  title={prize.attributes.title}
+                  alt={prize.attributes.title}
+                  image={prize.attributes.image}
+                  onClick={() => {}}
+                />
+              ))
+            }
+          </div>
         </Tab>
         <Tab
           label="My Prizes"
