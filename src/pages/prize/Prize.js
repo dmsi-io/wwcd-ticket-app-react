@@ -38,9 +38,12 @@ export default class Prize extends React.Component {
       .then(([err, { data }]) => data.attributes.committedTickets);
     const newUserTicketCount = await api.get(`/users/me`, true)
       .then(([err, { data }]) => data.attributes.tickets);
+    const newUserPrizes = await api.get('/users/me/prizes', true)
+      .then(([err, { data }]) => data);
 
-    await this.props.updateTicketCount(this.props.prize.id, newTicketCount);
+    this.props.updateTicketCount(this.props.prize.id, newTicketCount);
     this.props.updateUserTicketCount(newUserTicketCount);
+    this.props.updateUserPrizes(newUserPrizes);
 
     this.setState({ saving: false });
   };
@@ -56,7 +59,7 @@ export default class Prize extends React.Component {
   };
 
   render() {
-    const { prize } = this.props;
+    const { prize, userPrize } = this.props;
 
     return (
       <Modal
@@ -82,11 +85,15 @@ export default class Prize extends React.Component {
             </div>
             <div className="counter">
               <p>Your Tickets in Bucket</p>
-              <h3>0</h3>
+              <h3>{userPrize.committedTickets || 0}</h3>
             </div>
           </div>
           <div className="modal-footer">
-            <Button onClick={this.toggleConfirmationDialog}>Add Ticket</Button>
+            {
+              this.props.userInfo.tickets.remaining ?
+                <Button onClick={this.toggleConfirmationDialog}>Add Ticket</Button> :
+                <p>You're all out of tickets</p>
+            }
           </div>
         </div>
         {
