@@ -51,15 +51,17 @@ export default class Login extends React.Component {
 
       this.setState({ loading: true });
 
-      const [prizes, userInfo, categories] = await Promise.all([
+      const [prizes, userInfo, categories, userPrizes] = await Promise.all([
         api.get('/prizes').then(([err, { data }]) => data),
         api.get('/users/me', true).then(([err, { data }]) => data),
         api.get('/categories', true).then(([err, { data }]) => data),
+        api.get('/users/me/prizes', true).then(([err,  { data }]) => data),
       ]);
 
       this.props.setUserInfo(userInfo.attributes);
       this.props.setPrizes(prizes);
       this.props.setCategories(categories);
+      this.props.setUserPrizes(userPrizes);
 
       this.setState({ loading: false });
 

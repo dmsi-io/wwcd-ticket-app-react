@@ -45,6 +45,7 @@ const openPrize = (prizeId) => () => {
 export default (props) => {
   const queryParams = qs.parse(history.location.search.replace('?', ''));
   const prizes = Object.keys(props.prizes).map((k) => props.prizes[k]);
+  const userPrizes = Object.keys(props.userPrizes).map((k) => props.userPrizes[k]);
 
   return (
     <React.Fragment>
@@ -110,7 +111,7 @@ export default (props) => {
                   onClick={openPrize(prize.id)}
                 >
                   <p>
-                    <span>Tickets in Bucket:</span>
+                    <span>Total Tickets in Bucket:</span>
                     <Badge>{prize.committedTickets}</Badge>
                   </p>
                 </Card>
@@ -122,9 +123,24 @@ export default (props) => {
           label="My Prizes"
           id="mine"
         >
-          <p>
-            All Prizes
-          </p>
+          <div className="card-container">
+            {
+              sortOn(userPrizes, 'title').map((prize) => (
+                <Card
+                  key={prize.id}
+                  title={prize.title}
+                  alt={prize.title}
+                  image={prize.image}
+                  onClick={openPrize(prize.id)}
+                >
+                  <p>
+                    <span>My Tickets in Bucket:</span>
+                    <Badge>{prize.committedTickets}</Badge>
+                  </p>
+                </Card>
+              ))
+            }
+          </div>
         </Tab>
       </NewTabGroup>
       {
