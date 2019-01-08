@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import sortOn from 'sort-on';
 
 import Card from '../../../components/card';
 
@@ -7,7 +8,7 @@ import Card from '../../../components/card';
 const Categories = (props) => (
   <div className="card-container">
     {
-      props.categories.map((category) => (
+      sortOn(props.categories, 'attributes.name').map((category) => (
         <Card
           title={category.attributes.name}
           key={category.id}
