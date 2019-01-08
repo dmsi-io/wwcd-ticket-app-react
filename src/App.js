@@ -6,14 +6,13 @@ import {
   Redirect,
 } from 'react-router-dom';
 import { Header } from '@dmsi/wedgekit';
-import { get } from 'dot-prop';
 import { Provider } from 'react-redux';
 
 import store from './redux/store';
 
 import storage from './utils/storage';
 import history from './utils/history';
-import api from './utils/api';
+import poll from './utils/poll';
 
 import {
   Prizes,
@@ -40,25 +39,8 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => (
 );
 
 class App extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      categories: [],
-      prizes: [],
-    };
-  }
-
   componentDidMount() {
-    Promise.all([
-      api.get('/categories'),
-      api.get('/prizes'),
-    ]).then(([ categories, prizes ]) => {
-      this.setState({
-        prizes: get(prizes, '1.data'),
-        categories: get(categories, '1.data'),
-      });
-    })
+    poll(store);
   }
 
   render() {
