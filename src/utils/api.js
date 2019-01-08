@@ -24,7 +24,7 @@ export default {
       });
   },
   post: (route, body, authNeeded) => {
-    const url = `https://dmsiparty/v1${route}`;
+    const url = `https://dmsiparty.com/v1${route}`;
 
     const contentType = 'application/json';
 

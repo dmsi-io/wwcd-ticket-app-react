@@ -5,9 +5,8 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import {
-  Header
-} from '@dmsi/wedgekit';
+import { Header } from '@dmsi/wedgekit';
+import { get } from 'dot-prop';
 
 import storage from './utils/storage';
 import history from './utils/history';
@@ -48,12 +47,15 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    api.get('/categories').then(([err, {data}]) => {
-      this.setState({categories: data});
-    });
-    api.get('/prizes').then(([err, { data }]) => {
-      this.setState({ prizes: data });
-    });
+    Promise.all([
+      api.get('/categories'),
+      api.get('/prizes'),
+    ]).then(([ categories, prizes ]) => {
+      this.setState({
+        prizes: get(prizes, '1.data'),
+        categories: get(categories, '1.data'),
+      });
+    })
   }
 
   render() {
@@ -101,7 +103,7 @@ class App extends React.Component {
                 )}
               />
               <PrivateRoute
-                path="/prizes/categories/:id?"
+                path="/prizes/categories/:categoryId?"
                 exact
                 component={(props) => (
                   <Prizes
