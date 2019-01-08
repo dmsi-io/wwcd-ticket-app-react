@@ -3,9 +3,9 @@ import {
   Modal,
   Button,
   ConfirmationDialog,
+  Loading,
 } from '@dmsi/wedgekit';
 import Lozenge from '@atlaskit/lozenge';
-import { get } from 'dot-prop';
 
 import api from '../../utils/api';
 import storage from '../../utils/storage';
@@ -17,32 +17,38 @@ export default class Prize extends React.Component {
     super(props);
 
     this.state = {
-      id: '',
-      title: '',
-      image: '',
-      description: '',
-      committedTickets: '',
-      category: '',
       confirmationOpen: false,
+      saving: false,
     };
   }
 
-  componentDidMount() {
-    api.get(`/prizes/${this.props.id}`).then(([err, { data }]) => {
-      console.log('🐶');
-      this.setState({ ...data.attributes });
-    });
-  }
+  commitTicket = async () => {
+    this.setState({ saving: true, confirmationOpen: false });
 
-  commitTicket = () => {
-    api.post('/users/me/tickets', {
+    await api.post('/users/me/tickets', {
       data: {
         attributes: {
-          prize: this.state.id,
+          prize: this.props.prize.id,
           user: storage.get('userID'),
         }
       }
     }, true);
+
+    const newTicketCount = await api.get(`/prizes/${this.props.prize.id}`)
+      .then(([err, { data }]) => data.attributes.committedTickets);
+    const newUserTicketCount = await api.get(`/users/me`, true)
+      .then(([err, { data }]) => data.attributes.tickets);
+
+    await this.props.updateTicketCount(this.props.prize.id, newTicketCount);
+    this.props.updateUserTicketCount(newUserTicketCount);
+
+    this.setState({ saving: false });
+  };
+
+  handleExit = () => {
+    if (!this.state.saving && !this.state.confirmationOpen) {
+      this.props.onExit();
+    }
   };
 
   toggleConfirmationDialog = () => {
@@ -50,26 +56,29 @@ export default class Prize extends React.Component {
   };
 
   render() {
-    const category = this.props.categories
-      .find((c) => c.id === this.state.category);
+    const { prize } = this.props;
 
     return (
       <Modal
         underlayClickExits
-        onExit={this.props.onExit}
+        onExit={this.handleExit}
       >
+        {
+          this.state.saving &&
+            <Loading />
+        }
         <div className="modal-content">
-          <img src={this.state.image} alt={this.state.title} />
-          <h2>{this.state.title}</h2>
+          <img src={prize.image} alt={prize.title} />
+          <h2>{prize.title}</h2>
           <Lozenge>
-            {get(category, 'attributes.name')}
+            {this.props.categories[prize.category].name}
           </Lozenge>
-          <p className="modal-description">{this.state.description}</p>
+          <p className="modal-description">{prize.description}</p>
           <div className="modal-section-divider" />
           <div className="counter-container">
             <div className="counter">
               <p>Tickets in Bucket</p>
-              <h3>{this.state.committedTickets}</h3>
+              <h3>{prize.committedTickets}</h3>
             </div>
             <div className="counter">
               <p>Your Tickets in Bucket</p>

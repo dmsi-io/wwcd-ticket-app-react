@@ -46,6 +46,17 @@ export default class Login extends React.Component {
     } else {
       storage.set('token', tokenData.data.attributes.token);
       storage.set('userID', tokenData.data.id);
+
+      const [prizes, userInfo, categories] = await Promise.all([
+        api.get('/prizes').then(([err, { data }]) => data),
+        api.get('/users/me', true).then(([err, { data }]) => data),
+        api.get('/categories', true).then(([err, { data }]) => data),
+      ]);
+
+      this.props.setUserInfo(userInfo.attributes);
+      this.props.setPrizes(prizes);
+      this.props.setCategories(categories);
+
       history.push('/prizes');
     }
   };

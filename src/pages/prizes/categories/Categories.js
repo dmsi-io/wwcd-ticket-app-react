@@ -8,12 +8,15 @@ import Card from '../../../components/card';
 const Categories = (props) => (
   <div className="card-container">
     {
-      sortOn(props.categories, 'attributes.name').map((category) => (
+      sortOn(
+        Object.keys(props.categories).map((k) => props.categories[k]),
+        'name'
+      ).map((category) => (
         <Card
-          title={category.attributes.name}
+          title={category.name}
           key={category.id}
-          image={category.attributes.image}
-          alt={category.attributes.name}
+          image={category.image}
+          alt={category.name}
           onClick={() => props.onClick(Object.assign({}, category))}
         />
       ))
@@ -22,7 +25,7 @@ const Categories = (props) => (
 );
 
 Categories.propTypes = {
-  categories: PropTypes.array.isRequired,
+  categories: PropTypes.object.isRequired,
   onClick: PropTypes.func.isRequired,
 };
 
