@@ -33,8 +33,18 @@
   width: calc(50% - 8px);
   margin: 4px;
   padding: 8px;
+  display: flex;
+  flex-direction: column;
 
   h3 {
     margin-top: 8px;
+  }
+}
+
+.category-card-footer {
+  margin-top: 8px;
+
+  p > * {
+    margin-right: 8px;
   }
 }

@@ -1,2 +1,2 @@
-import Prizes from './Prizes';
+import Prizes from './Prizes.wrapper';
 export default Prizes;

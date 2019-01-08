@@ -11,6 +11,10 @@ const Card  = (props) => (
       <img src={props.image} alt={props.alt} />
     </div>
     <h3>{props.title}</h3>
+    <div className="spacer" />
+    <div className="category-card-footer">
+      {props.children}
+    </div>
   </div>
 );
 

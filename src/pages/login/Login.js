@@ -4,6 +4,7 @@ import {
   TextInput,
   Button,
   Alerts,
+  Loading,
 } from '@dmsi/wedgekit';
 
 import api from '../../utils/api';
@@ -20,6 +21,7 @@ export default class Login extends React.Component {
       username: '',
       password: '',
       errors: [],
+      loading: false,
     }
   }
 
@@ -46,6 +48,21 @@ export default class Login extends React.Component {
     } else {
       storage.set('token', tokenData.data.attributes.token);
       storage.set('userID', tokenData.data.id);
+
+      this.setState({ loading: true });
+
+      const [prizes, userInfo, categories] = await Promise.all([
+        api.get('/prizes').then(([err, { data }]) => data),
+        api.get('/users/me', true).then(([err, { data }]) => data),
+        api.get('/categories', true).then(([err, { data }]) => data),
+      ]);
+
+      this.props.setUserInfo(userInfo.attributes);
+      this.props.setPrizes(prizes);
+      this.props.setCategories(categories);
+
+      this.setState({ loading: false });
+
       history.push('/prizes');
     }
   };
@@ -57,6 +74,10 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="login">
+        {
+          this.state.loading &&
+            <Loading />
+        }
         <Card>
           <form onSubmit={this.login}>
             <div className="cardBody">

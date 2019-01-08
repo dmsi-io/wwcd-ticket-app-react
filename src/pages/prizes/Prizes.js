@@ -5,135 +5,135 @@ import {
 } from '@dmsi/wedgekit';
 import sortOn from 'sort-on';
 import qs from 'qs';
+import Badge from '@atlaskit/badge';
 
-import api from '../../utils/api';
 import history from '../../utils/history';
+
 import Categories from './categories';
 import Card from '../../components/card';
-import Prize from '../prize';
 import Header from '../../components/header';
+import { Prize } from '../';
 
 import './Prizes.scss';
 
-export default class Prizes extends React.Component {
-  componentDidMount() {
-    api.get('/users/me/prizes', true).then((data) => {
-      // console.log(data);
-    });
-  }
+const handleTabChange = (view) => () => {
+  history.push(`/prizes?${qs.stringify({ view })}`);
+};
 
-  handleTabChange = (tab) => () => {
-    history.push(tab);
-  };
+const hidePrize = () => {
+  const params = qs.parse(history.location.search.replace('?', ''));
+  delete params.prizeId;
+  history.push(`/prizes?${qs.stringify(params)}`);
+};
 
-  hidePrize = () => {
-    const baseUrl = this.props.match.params.categoryId ?
-      `/prizes/categories/${this.props.match.params.categoryId}` :
-      `/prizes`;
-    history.push(baseUrl);
-  };
+const openCategory = (category) => {
+  const params = qs.parse(history.location.search.replace('?', ''));
+  history.push(`/prizes?${qs.stringify({
+    ...params,
+    categoryId: category.id, 
+  })}`);
+};
 
-  openCategory = (category) => {
-    history.push(`/prizes/categories/${category.id}`);
-  };
+const openPrize = (prizeId) => () => {
+  const params = qs.parse(history.location.search.replace('?', ''));
+  history.push(`/prizes?${qs.stringify({
+    ...params,  
+    prizeId, 
+  })}`);
+};
 
-  openPrize = (prizeId) => () => {
-    const baseUrl = this.props.match.params.categoryId ?
-      `/prizes/categories/${this.props.match.params.categoryId}` :
-      `/prizes`;
-    history.push(`${baseUrl}?${qs.stringify({ prizeId })}`);
-  };
+export default (props) => {
+  const queryParams = qs.parse(history.location.search.replace('?', ''));
+  const prizes = Object.keys(props.prizes).map((k) => props.prizes[k]);
 
-  render() {
-    const { categoryId } = this.props.match.params;
-    const queryParams = qs.parse(history.location.search.replace('?', ''));
-
-    return (
-      <React.Fragment>
-        <Header />
-        <NewTabGroup
-          activeTabId={categoryId ?
-            '/prizes/categories' :
-            this.props.match.path
-          }
-          onChange={this.handleTabChange}
+  return (
+    <React.Fragment>
+      <Header />
+      <NewTabGroup
+        activeTabId={queryParams.view || 'categories'}
+        onChange={handleTabChange}
+      >
+        <Tab
+          label="Categories"
+          id="categories"
         >
-          <Tab
-            label="Categories"
-            id="/prizes/categories"
-          >
-            <div>
+          <div>
+            <div className="categories-header">
               {
-                this.props.categories.length > 0 &&
-                <div className="categories-header">
+                queryParams.categoryId ?
+                  <h2>{props.categories[queryParams.categoryId].name}</h2> :
+                  <h2>All Categories</h2>
+              }
+              <div className="spacer" />
+            </div>
+            {
+              queryParams.categoryId ?
+                <div className="card-container">
                   {
-                    categoryId ?
-                      <h2>{this.props.categories.find((c) => c.id === categoryId).attributes.name}</h2> :
-                      <h2>All Categories</h2>
+                    sortOn(prizes, 'title')
+                      .filter((prize) => prize.category === queryParams.categoryId)
+                      .map((prize) => (
+                        <Card
+                          key={prize.id}
+                          title={prize.title}
+                          alt={prize.title}
+                          image={prize.image}
+                          onClick={openPrize(prize.id)}
+                        >
+                          <p>
+                            <span>Tickets in Bucket:</span>
+                            <Badge>{prize.committedTickets}</Badge>
+                          </p>
+                        </Card>
+                      ))
                   }
-                  <div className="spacer" />
-                </div>
-              }
-              {
-                categoryId ?
-                  <div className="card-container">
-                    {
-                      sortOn(this.props.prizes, 'attributes.title')
-                        .filter((prize) => prize.attributes.category === categoryId)
-                        .map((prize) => (
-                          <Card
-                            key={prize.id}
-                            title={prize.attributes.title}
-                            alt={prize.attributes.title}
-                            image={prize.attributes.image}
-                            onClick={this.openPrize(prize.id)}
-                          />
-                        ))
-                    }
-                  </div>:
-                  <Categories
-                    categories={this.props.categories}
-                    onClick={this.openCategory}
-                  />
-              }
-            </div>
-          </Tab>
-          <Tab
-            label="All Prizes"
-            id="/prizes"
-          >
-            <div className="card-container">
-              {
-                sortOn(this.props.prizes, 'attributes.title').map((prize) => (
-                  <Card
-                    key={prize.id}
-                    title={prize.attributes.title}
-                    alt={prize.attributes.title}
-                    image={prize.attributes.image}
-                    onClick={this.openPrize(prize.id)}
-                  />
-                ))
-              }
-            </div>
-          </Tab>
-          <Tab
-            label="My Prizes"
-            id="/prizes/me"
-          >
-            <p>
-              All Prizes
-            </p>
-          </Tab>
-        </NewTabGroup>
-        {
-          queryParams.prizeId &&
-          <Prize
-            id={queryParams.prizeId}
-            onExit={this.hidePrize}
-            categories={this.props.categories}
-          />
-        }
-      </React.Fragment>
-    );
-  }
-}
+                </div>:
+                <Categories
+                  categories={props.categories}
+                  onClick={openCategory}
+                />
+            }
+          </div>
+        </Tab>
+        <Tab
+          label="All Prizes"
+          id="all"
+        >
+          <div className="card-container">
+            {
+              sortOn(prizes, 'title').map((prize) => (
+                <Card
+                  key={prize.id}
+                  title={prize.title}
+                  alt={prize.title}
+                  image={prize.image}
+                  onClick={openPrize(prize.id)}
+                >
+                  <p>
+                    <span>Tickets in Bucket:</span>
+                    <Badge>{prize.committedTickets}</Badge>
+                  </p>
+                </Card>
+              ))
+            }
+          </div>
+        </Tab>
+        <Tab
+          label="My Prizes"
+          id="mine"
+        >
+          <p>
+            All Prizes
+          </p>
+        </Tab>
+      </NewTabGroup>
+      {
+        queryParams.prizeId &&
+        <Prize
+          id={queryParams.prizeId}
+          onExit={hidePrize}
+        />
+      }
+    </React.Fragment>
+  );
+};
