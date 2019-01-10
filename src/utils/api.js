@@ -1,4 +1,7 @@
 import storage from './storage';
+import { USER_LOGOUT } from '../redux/modules/userLogout';
+import store from '../redux/store';
+import history from './history';
 
 const getToken = () => {
   const token = storage.get('token');
@@ -17,6 +20,11 @@ export default {
       .then((data) => data.json())
       .then((data) => {
         if (data.errors) {
+          if (data.errors[0].code === 'UserExpiredError') {
+            store.dispatch({ type: USER_LOGOUT });
+            history.push('/');
+          }
+
           return [data];
         }
 
@@ -43,6 +51,11 @@ export default {
       .then((data) => data.json())
       .then((data) => {
         if (data.errors) {
+          if (data.errors[0].code === 'UserExpiredError') {
+            store.dispatch({ type: USER_LOGOUT });
+            history.push('/');
+          }
+
           return [data];
         }
 
