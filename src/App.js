@@ -5,7 +5,6 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom';
-import { Header } from '@dmsi/wedgekit';
 import { Provider } from 'react-redux';
 
 import store from './redux/store';
@@ -13,6 +12,8 @@ import store from './redux/store';
 import storage from './utils/storage';
 import history from './utils/history';
 import poll from './utils/poll';
+import api from './utils/api';
+import { setUserInfo } from './redux/modules/userInfo';
 
 import {
   Prizes,
@@ -41,6 +42,13 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => (
 class App extends React.Component {
   componentDidMount() {
     poll(store);
+
+    if (storage.get('token')) {
+      // Ensure that user still exists
+      api.get('/users/me', true)
+        .then(([err, data]) => data.data.attributes)
+        .then((data) => store.dispatch(setUserInfo(data)));
+    }
   }
 
   render() {
@@ -48,10 +56,6 @@ class App extends React.Component {
       <Provider store={store}>
         <Router history={history}>
           <div className="app">
-            <Header
-              collapsed
-              tagline="Holiday Party"
-            />
             <div className="content">
               <Switch>
                 <Route path="/login" exact component={Login} />
@@ -62,6 +66,9 @@ class App extends React.Component {
                 />
                 <Route render={() => (<Redirect to={{ pathname: '/prizes' }} />)} />
               </Switch>
+              <footer>
+                <p>Built <span role="img" aria-label="Fast and Powerful">⚡️</span> with <strong>WedgeKit</strong></p>
+              </footer>
             </div>
           </div>
         </Router>

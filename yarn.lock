@@ -897,10 +897,10 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
-"@dmsi/core@5.7.0":
-  version "5.7.0"
-  resolved "https://registry.yarnpkg.com/@dmsi/core/-/core-5.7.0.tgz#cdd4586ebe07b6ae94118270e7d831de36c3de72"
-  integrity sha512-GVRU96V9BpyCfukk+gXcx//0BZNH58L4e+PeIswfw9BD45yktPDgvITRg1/96xtza+WaXC5YU1LSPryZlHapBg==
+"@dmsi/core@5.7.1":
+  version "5.7.1"
+  resolved "https://registry.yarnpkg.com/@dmsi/core/-/core-5.7.1.tgz#fdf28d38409f10e4e58aaee6a39a7c8d3c35e482"
+  integrity sha512-30MlOftpv5vhXA66m5TSUHIKgop52cHbS8eqm/3zml8wWir6J3h3QVcZ1Jwm3iix8bvVTzP0qtxk8Wc+ZqcZCQ==
   dependencies:
     lodash "^4.17.4"
     prop-types "^15.6.0"
@@ -909,12 +909,12 @@
     reconnecting-websocket "^3.2.2"
     uuid "^3.1.0"
 
-"@dmsi/wedgekit@^8.6.3":
-  version "8.6.3"
-  resolved "https://registry.yarnpkg.com/@dmsi/wedgekit/-/wedgekit-8.6.3.tgz#a13585e3eae627bb616d53259bffb3223d1e4d3e"
-  integrity sha512-8LHOsxgMn0i7pxUPSKSiogON/zpvvhj4SvN30QXaWXt6QnTXWyqseyosCO/iUX/bM0HWogrNM2EbVnVek1XPWA==
+"@dmsi/wedgekit@^9.0.0":
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/@dmsi/wedgekit/-/wedgekit-9.0.0.tgz#4c1bdfeccc6a9888c8f7bf5226524e674ddb2917"
+  integrity sha512-+Mg5JirCSTMe+HXkCa/lc5T+AcrAm/HqV/pPgXd3eIUun6QnonuaHSTierJtwOA0X/gfdTgPKMQKal06qdHxXg==
   dependencies:
-    "@dmsi/core" "5.7.0"
+    "@dmsi/core" "5.7.1"
     array-flatten "^2.1.1"
     babel-plugin-react-css-modules "2.7.1"
     bowser "^2.0.0-beta.3"

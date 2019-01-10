@@ -2,6 +2,7 @@ import React from 'react';
 import {
   NewTabGroup,
   Tab,
+  Header,
 } from '@dmsi/wedgekit';
 import sortOn from 'sort-on';
 import qs from 'qs';
@@ -11,8 +12,9 @@ import history from '../../utils/history';
 
 import Categories from './categories';
 import Card from '../../components/card';
-import Header from '../../components/header';
+import UserHeader from '../../components/header';
 import { Prize } from '../';
+import HeaderRight from '../../components/headerRight';
 
 import './Prizes.scss';
 
@@ -49,7 +51,12 @@ export default (props) => {
 
   return (
     <React.Fragment>
-      <Header />
+      <Header
+        collapsed
+        tagline="Holiday Party"
+        rightContent={<HeaderRight />}
+      />
+      <UserHeader />
       <NewTabGroup
         activeTabId={queryParams.view || 'categories'}
         onChange={handleTabChange}

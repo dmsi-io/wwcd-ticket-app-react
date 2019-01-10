@@ -5,6 +5,7 @@ import {
   Button,
   Alerts,
   Loading,
+  Header,
 } from '@dmsi/wedgekit';
 
 import api from '../../utils/api';
@@ -76,6 +77,10 @@ export default class Login extends React.Component {
   render() {
     return (
       <div className="login">
+        <Header
+          collapsed
+          tagline="Holiday Party"
+        />
         {
           this.state.loading &&
             <Loading />

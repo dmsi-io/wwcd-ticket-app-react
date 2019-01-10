@@ -5,7 +5,7 @@
   "dependencies": {
     "@atlaskit/badge": "^9.2.2",
     "@atlaskit/lozenge": "^6.2.4",
-    "@dmsi/wedgekit": "^8.6.3",
+    "@dmsi/wedgekit": "^9.0.0",
     "dot-prop": "^4.2.0",
     "history": "^4.7.2",
     "node-sass": "^4.11.0",
