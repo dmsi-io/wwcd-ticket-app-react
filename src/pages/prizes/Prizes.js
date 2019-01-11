@@ -127,7 +127,7 @@ export default (props) => {
           </div>
         </Tab>
         <Tab
-          label="My Prizes"
+          label="My Entries"
           id="mine"
         >
           <div className="card-container">
