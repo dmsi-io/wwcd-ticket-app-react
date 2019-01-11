@@ -8,7 +8,6 @@
     "@dmsi/wedgekit": "^9.0.0",
     "dot-prop": "^4.2.0",
     "history": "^4.7.2",
-    "node-sass": "^4.11.0",
     "prop-types": "^15.6.2",
     "qs": "^6.6.0",
     "react": "^16.7.0",
@@ -36,5 +35,8 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "node-sass": "^4.11.0"
+  }
 }
