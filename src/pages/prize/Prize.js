@@ -1,16 +1,26 @@
 import React from 'react';
+import styled from 'styled-components';
+
 import {
   Modal,
   Button,
   ConfirmationDialog,
   Loading,
-} from '@dmsi/wedgekit';
+} from '@wedgekit/core';
 import Lozenge from '@atlaskit/lozenge';
+import Layout from '@wedgekit/layout';
+import { Title, Text } from '@wedgekit/primitives';
 
 import api from '../../utils/api';
 import storage from '../../utils/storage';
 
 import './Prize.scss';
+
+const Image = styled.img`
+  width: 100%;
+  overflow: hidden;
+  object-fit: cover;
+`;
 
 export default class Prize extends React.Component {
   constructor(props) {
@@ -18,6 +28,7 @@ export default class Prize extends React.Component {
 
     this.state = {
       confirmationOpen: false,
+      ticketCount: 1,
       saving: false,
     };
   }
@@ -28,8 +39,9 @@ export default class Prize extends React.Component {
     await api.post('/users/me/tickets', {
       data: {
         attributes: {
+          ticketCount: this.state.ticketCount,
           prize: this.props.prize.id,
-          user: storage.get('userID'),
+          user: parseInt(storage.get('userID'), 10),
         }
       }
     }, true);
@@ -60,6 +72,9 @@ export default class Prize extends React.Component {
 
   render() {
     const { prize, userPrize } = this.props;
+    const { ticketCount } = this.state;
+
+    const commitButtonText = `Add ${ticketCount} Ticket${ticketCount > 1 ? 's' : ''}`;
 
     return (
       <Modal
@@ -70,38 +85,53 @@ export default class Prize extends React.Component {
           this.state.saving &&
             <Loading />
         }
-        <div className="modal-content">
-          <img src={prize.image} alt={prize.title} />
-          <h2>{prize.title}</h2>
-          <Lozenge>
-            {this.props.categories[prize.category].name}
-          </Lozenge>
-          <p className="modal-description">{prize.description}</p>
+        <Layout.Grid columns={[1]} areas={[]} multiplier={2}>
+          <Image src={prize.image} alt={prize.title} />
+          <Title level={2} elementLevel={2}>{prize.title}</Title>
+          <div>
+            <Lozenge>
+              {this.props.categories[prize.categoryId].name}
+            </Lozenge>
+          </div>
+          <Text>{prize.description}</Text>
           <div className="modal-section-divider" />
-          <div className="counter-container">
-            <div className="counter">
-              <p>Tickets in Bucket</p>
-              <h3>{prize.committedTickets}</h3>
-            </div>
-            <div className="counter">
-              <p>Your Tickets in Bucket</p>
-              <h3>{userPrize.committedTickets || 0}</h3>
-            </div>
-          </div>
-          <div className="modal-footer">
-            {
-              this.props.userInfo.tickets.remaining ?
-                <Button onClick={this.toggleConfirmationDialog}>Add Ticket</Button> :
-                <p>You're all out of tickets</p>
-            }
-          </div>
-        </div>
+          <Layout.Grid columns={[1, 1]} areas={[]}>
+            <Layout.Grid columns={[1]} areas={[]}>
+              <Text style={{ textAlign: 'center' }}><strong>Tickets in Bucket</strong></Text>
+              <Title style={{ fontSize: '60px', textAlign: 'center' }} level={1} elementLevel={3}>{prize.committedTickets || 0}</Title>
+            </Layout.Grid>
+            <Layout.Grid columns={[1]} areas={[]}>
+              <Text style={{ textAlign: 'center' }}><strong>Your Tickets in Bucket</strong></Text>
+              <Title style={{ fontSize: '60px', textAlign: 'center' }} level={1} elementLevel={3}>{userPrize.committedTickets || 0}</Title>
+            </Layout.Grid>
+          </Layout.Grid>
+          {
+            this.props.userInfo.tickets.remaining ?
+              <Layout.Grid columns={['repeat(3, minmax(0, max-content))']} areas={[]} justify="center">
+                <Button
+                  disabled={ticketCount < 2}
+                  onClick={() => this.setState(({ ticketCount }) => ({ ticketCount: ticketCount - 1 }))}
+                >
+                  -
+                </Button>
+                <Button domain="primary" onClick={this.toggleConfirmationDialog}>{commitButtonText}</Button>
+                <Button
+                  domain="primary"
+                  disabled={ticketCount === this.props.userInfo.tickets.remaining}
+                  onClick={() => this.setState(({ ticketCount }) => ({ ticketCount: ticketCount + 1 }))}
+                >
+                  +
+                </Button>
+              </Layout.Grid> :
+              <p>You're all out of tickets</p>
+          }
+        </Layout.Grid>
         {
           this.state.confirmationOpen &&
             <ConfirmationDialog
               primaryLabel="Yes"
-              message={<p>Are you sure you want to commit <strong>1 ticket</strong>? You cannot undo this action.</p>}
-              projectContext="danger"
+              message={<Text>Are you sure you want to commit <strong>{ticketCount} ticket{ticketCount > 1 ? 's' : ''}</strong>? You cannot undo this action.</Text>}
+              primaryDomain="danger"
               onExit={this.toggleConfirmationDialog}
               onAction={this.commitTicket}
             />
