@@ -1,12 +1,14 @@
 import React from 'react';
 import {
   Card,
-  TextInput,
+  Input,
   Button,
-  Alerts,
+  Alert,
   Loading,
-  Header,
-} from '@dmsi/wedgekit';
+} from '@wedgekit/core';
+import { Text, Title } from '@wedgekit/primitives';
+import Form, { Field } from '@wedgekit/form';
+import Layout from '@wedgekit/layout';
 
 import api from '../../utils/api';
 import storage from '../../utils/storage';
@@ -30,13 +32,11 @@ export default class Login extends React.Component {
     this.setState({ [field]: value });
   };
 
-  login = async (e) => {
-    e.preventDefault();
-
+  login = async ({ username, password }) => {
     const data = {
       attributes: {
-        username: this.state.username.toLowerCase(),
-        password: this.state.password,
+        username: username.toLowerCase(),
+        password,
       }
     };
 
@@ -76,49 +76,63 @@ export default class Login extends React.Component {
 
   render() {
     return (
-      <div className="login">
-        <Header
-          collapsed
-          tagline="Holiday Party"
-        />
+      <Layout.Grid
+        columns={['minmax(0, max-content)']}
+        rows={['minmax(0, max-content)']}
+        areas={[]}
+        justify="center"
+        align="center"
+      >
         {
           this.state.loading &&
             <Loading />
         }
-        <Card>
-          <form onSubmit={this.login}>
-            <div className="cardBody">
-              {
-                this.state.errors.length > 0 &&
-                <Alerts
-                  alerts={this.state.errors.map((error) => error.detail)}
-                  onClose={this.onApiErrorClose}
-                />
-              }
-              <h2>Login</h2>
-              <p>Don't have your login credentials? See Tanya for your card.</p>
-              <TextInput
-                size="large"
-                label="Username"
-                value={this.state.username}
-                onChange={this.handleFieldChange('username')}
-                required
-              />
-              <TextInput
-                size="large"
-                label="Password"
-                type="password"
-                value={this.state.password}
-                onChange={this.handleFieldChange('password')}
-                required
-              />
-            </div>
-            <div className="cardFooter">
-              <Button type="submit">Login</Button>
-            </div>
-          </form>
+        <Card style={{ marginTop: '30vh', maxWidth: '300px' }}>
+          <Form onSubmit={this.login}>
+            {({ formProps }) => (
+              <form {...formProps}>
+                <Layout.Grid columns={[1]} areas={[]} multiplier={2}>
+                  {
+                    this.state.errors.map((error) => (
+                      <Alert
+                        key={error.detail}
+                        onClose={this.onApiErrorClose}
+                      >
+                        {error.detail}
+                      </Alert>
+                    ))
+                  }
+                  <Title level={2} elementLevel={2}>Login</Title>
+                  <Text>Don't have your login credentials? See Tanya for your card.</Text>
+                  <Field
+                    label="Username"
+                    required
+                    defaultValue=""
+                    name="username"
+                  >
+                    {({ fieldProps }) => (
+                      <Input fullWidth {...fieldProps} />
+                    )}
+                  </Field>
+                  <Field
+                    label="Password"
+                    required
+                    defaultValue=""
+                    name="password"
+                  >
+                    {({ fieldProps }) => (
+                      <Input fullWidth elementType="password" {...fieldProps} />
+                    )}
+                  </Field>
+                  <Layout.Grid columns={['minmax(0, max-content)']} areas={[]} justify="end">
+                    <Button domain="primary" type="submit">Login</Button>
+                  </Layout.Grid>
+                </Layout.Grid>
+              </form>
+            )}
+          </Form>
         </Card>
-      </div>
+      </Layout.Grid>
     );
   }
 }
