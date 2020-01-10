@@ -9,9 +9,6 @@ export default (store) => {
   storage.set('lastChecked', new Date());
 
   async function checkPollReady() {
-    // TODO: Replace with a dedicated polling route when created
-    // This will eliminate unnecessary redux dispatches
-
     if (storage.get('token')) {
       const prizes = await api.get(`/prizes/diff?${qs.stringify({
         since: new Date(storage.get('lastChecked')),

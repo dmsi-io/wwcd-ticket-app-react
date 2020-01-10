@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown } from '@dmsi/wedgekit';
+import { Dropdown } from '@wedgekit/core';
 
 import { USER_LOGOUT } from '../../redux/modules/userLogout';
 import store from '../../redux/store';

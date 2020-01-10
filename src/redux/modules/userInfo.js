@@ -4,15 +4,15 @@ export const UPDATE_TICKET_COUNT = 'party/userInfo/UPDATE_TICKET_COUNT';
 
 // Action Creators
 export function setUserInfo({
-  firstName,
-  lastName,
+  firstname,
+  lastname,
   id,
   tickets,
 }) {
   return {
     type: SET_USER_INFO,
-    firstName,
-    lastName,
+    firstName: firstname,
+    lastName: lastname,
     id,
     tickets,
   };

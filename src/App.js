@@ -20,7 +20,6 @@ import {
   Login,
 } from './pages';
 
-import '@dmsi/wedgekit/dist/wedgekit.css';
 import './App.scss';
 
 const PrivateRoute = ({ component: Component, ...routeProps }) => (
@@ -55,22 +54,15 @@ class App extends React.Component {
     return (
       <Provider store={store}>
         <Router history={history}>
-          <div className="app">
-            <div className="content">
-              <Switch>
-                <Route path="/login" exact component={Login} />
-                <PrivateRoute
-                  path="/prizes"
-                  exact
-                  component={Prizes}
-                />
-                <Route render={() => (<Redirect to={{ pathname: '/prizes' }} />)} />
-              </Switch>
-              <footer>
-                <p>Built <span role="img" aria-label="Fast and Powerful">⚡️</span> with <strong>WedgeKit</strong></p>
-              </footer>
-            </div>
-          </div>
+          <Switch>
+            <Route path="/login" exact component={Login} />
+            <PrivateRoute
+              path="/prizes"
+              exact
+              component={Prizes}
+            />
+            <Route render={() => (<Redirect to={{ pathname: '/prizes' }} />)} />
+          </Switch>
         </Router>
       </Provider>
     );
