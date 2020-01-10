@@ -8,6 +8,7 @@
     "@dmsi/wedgekit": "^9.0.0",
     "@wedgekit/color": "^3.0.1",
     "@wedgekit/core": "^11.0.62",
+    "@wedgekit/form": "^0.3.1",
     "@wedgekit/icons": "^1.1.8",
     "@wedgekit/illustrations": "^1.2.5",
     "@wedgekit/layout": "^0.4.2",
