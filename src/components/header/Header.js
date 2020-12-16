@@ -1,22 +1,20 @@
 import React from 'react';
-import { get } from 'dot-prop';
-import Lozenge from '@atlaskit/lozenge';
 import Layout from '@wedgekit/layout';
 import primitives, { Title } from '@wedgekit/primitives';
 import styled from 'styled-components';
+import { Wedge } from '@wedgekit/illustrations';
+import { IconWidth } from '@wedgekit/icons';
 
 const UserHeader = styled(Layout.Grid)`
   font-family: ${primitives.fontFamily};
+  margin: 24px 0;
 `;
 
 export default (props) => (
-  <UserHeader areas={[]} columns={[1, 'minmax(0, max-content)']} align="center">
-    <Title level={1} elementLevel={1}>Welcome,<br />{props.userInfo.firstName}!</Title>
-    <div className="user-counter">
-      <Lozenge>
-        Tickets Remaining
-      </Lozenge>
-      <Title style={{ fontSize: '50px', textAlign: 'center' }} level={1} elementLevel={3}>{get(props.userInfo, 'tickets.remaining')}</Title>
-    </div>
+  <UserHeader areas={[]} columns={['minmax(0, max-content)', 1]} align="start" multiplier={3}>
+    <IconWidth iconWidth={32}>
+      <Wedge />
+    </IconWidth>
+    <Title level={1} elementLevel={1}>Happy Holidays from DMSi, {props.userInfo.firstName}!</Title>
   </UserHeader>
 );

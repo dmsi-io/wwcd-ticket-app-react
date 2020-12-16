@@ -1,17 +1,15 @@
 import React from 'react';
 import sortOn from 'sort-on';
 import qs from 'qs';
-import Badge from '@atlaskit/badge';
+import styled from 'styled-components';
 
 import {
   Tabs,
-  Card,
 } from '@wedgekit/core';
 import Layout from '@wedgekit/layout';
 import { Text, Title } from '@wedgekit/primitives';
 import { Wedge } from '@wedgekit/illustrations';
 import { IconWidth } from '@wedgekit/icons';
-import styled from 'styled-components';
 
 import history from '../../utils/history';
 
@@ -25,7 +23,7 @@ import Header from './styled/Header';
 import Container from './styled/Container';
 import ContentWrapper from './styled/ContentWrapper';
 
-import ImageWrapper from './styled/ImageWrapper';
+import Card from './Card';
 
 const Footer = styled.footer`
   width: 100%;
@@ -68,15 +66,6 @@ export default (props) => {
 
   return (
     <Container columns={[1]} areas={[]} multiplier={2} rows={['minmax(0, max-content)', 1]}>
-      <Header>
-        <Layout.Grid columns={['repeat(2, minmax(0, max-content))']} areas={[]} multiplier={2} align="center">
-          <IconWidth iconWidth={32}>
-            <Wedge />
-          </IconWidth>
-          <Text><strong>Holiday Party</strong></Text>
-        </Layout.Grid>
-        <HeaderRight />
-      </Header>
       <Scroll>
         <ContentWrapper>
           <UserHeader />
@@ -88,7 +77,6 @@ export default (props) => {
               {[
                 { id: 'categories', label: 'Categories', href: '/prizes?view=categories' },
                 { id: 'all', label: 'All Prizes', href: '/prizes?view=all' },
-                { id: 'mine', label: 'My Entries', href: '/prizes?view=mine' },
               ]}
             </Tabs>
             {
@@ -103,26 +91,12 @@ export default (props) => {
                 </Layout.Grid>
                 {
                   queryParams.categoryId ?
-                    <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
+                    <Layout.Grid columns={[1, 1, 1, 1]} columnsMd={[1, 1, 1]} columnsSm={[1, 1]} areas={[]} multiplier={2}>
                       {
                         sortOn(prizes, 'title')
                           .filter((prize) => prize.categoryId === parseInt(queryParams.categoryId, 10))
                           .map((prize) => (
-                            <Card onClick={openPrize(prize.id)}>
-                              <Layout.Grid columns={[1]} areas={[]} multiplier={2} rows={['minmax(0, max-content)', 1, 'minmax(0, max-content)']}>
-                                <div>
-                                  <ImageWrapper>
-                                    <img src={prize.image} alt={prize.title} />
-                                  </ImageWrapper>
-                                  <Title level={3} elementLevel={3}>{prize.title}</Title>
-                                </div>
-                                <div />
-                                <Layout.Grid columns={['repeat(2, minmax(0, max-content))']} areas={[]} align="end">
-                                  <Text>Total Tickets in Bucket:</Text>
-                                  <Badge>{prize.committedTickets}</Badge>
-                                </Layout.Grid>
-                              </Layout.Grid>
-                            </Card>
+                            <Card openPrize={openPrize(prize.id)} {...prize} />
                           ))
                       }
                     </Layout.Grid>:
@@ -135,28 +109,10 @@ export default (props) => {
             }
             {
               (queryParams.view === 'all' || queryParams.view === 'mine') &&
-              <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
+              <Layout.Grid columns={[1, 1, 1, 1]} columnsMd={[1, 1, 1]} columnsSm={[1, 1]} areas={[]} multiplier={2}>
                 {
                   sortOn(queryParams.view === 'all' ? prizes : userPrizes, 'title').map((prize) => (
-                    <Card onClick={openPrize(prize.id)}>
-                      <Layout.Grid columns={[1]} areas={[]} multiplier={2} rows={['minmax(0, max-content)', 1, 'minmax(0, max-content)']}>
-                        <div>
-                          <ImageWrapper>
-                            <img src={prize.image} alt={prize.title} />
-                          </ImageWrapper>
-                          <Title level={3} elementLevel={3}>{prize.title}</Title>
-                        </div>
-                        <div />
-                        <Layout.Grid columns={['repeat(2, minmax(0, max-content))']} areas={[]} align="end">
-                          {
-                            queryParams.view === 'all' ?
-                              <Text>Total Tickets in Bucket:</Text> :
-                              <span>My Tickets in Bucket:</span>
-                          }
-                          <Badge>{prize.committedTickets}</Badge>
-                        </Layout.Grid>
-                      </Layout.Grid>
-                    </Card>
+                    <Card openPrize={openPrize(prize.id)} {...prize} />
                   ))
                 }
               </Layout.Grid>
