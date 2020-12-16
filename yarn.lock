@@ -2394,10 +2394,10 @@
   resolved "https://registry.yarnpkg.com/@wedgekit/icons/-/icons-1.1.7.tgz#e883814bac46db0a3bee71bdc1a82a56a276300d"
   integrity sha512-R4nW713Wo19DbR20E95p7vWraWuRwkIYTxDPQ6v/pvdIQnpPkf7yQ2PplrBlAFe+m49qJLWwqVHAzXFI90Sozw==
 
-"@wedgekit/icons@^1.1.8":
-  version "1.1.8"
-  resolved "https://registry.yarnpkg.com/@wedgekit/icons/-/icons-1.1.8.tgz#e596b036c07af8908dce9f4f2986abac37c5f959"
-  integrity sha512-C5oaptMaz/+g9ctxBMRd1k+RyHc/66xfOAZL0UBQLId2n8OjhhF0SVIy9C4p0O5Uf5290tjqVtVyKzOLMHI05g==
+"@wedgekit/icons@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@wedgekit/icons/-/icons-1.7.0.tgz#e896f17c52fd732be66cb0031c8486f78892bcdb"
+  integrity sha512-H/zjZJOV/yXzZxQ3LKSFOdwpQtDEacfPP/6/3wJF5PHLFEHPq6rPUOmuWYxZEwGEMyZgTfW5UsVwzgk7+YnN9w==
 
 "@wedgekit/illustrations@1.2.5", "@wedgekit/illustrations@^1.2.5":
   version "1.2.5"
@@ -2415,6 +2415,11 @@
   version "1.3.12"
   resolved "https://registry.yarnpkg.com/@wedgekit/primitives/-/primitives-1.3.12.tgz#1f902a4d8b241e3d1fa45b411deca2f115346b23"
   integrity sha512-ctZqa6cEYgl/tR1ViTbR2nUNKwzR2EDpk8W5CmXYqfgbXc22N+a34XcdOOpVHFvphiw8cUVQ1xYmwuu/PyMzQA==
+
+"@wedgekit/primitives@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@wedgekit/primitives/-/primitives-1.7.0.tgz#a0aec348bf6ed8640df359656ffe7758879d5d89"
+  integrity sha512-Q40jq+Ui4HiogUWDIKExg7iMpPJ1bXYnJ4qeCD+fr0LdbmSorpV0gey+jd33u4youoDq/cqDkZhtJ/PkKT+IHA==
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
