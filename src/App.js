@@ -20,8 +20,6 @@ import {
   Login,
 } from './pages';
 
-import './App.scss';
-
 const PrivateRoute = ({ component: Component, ...routeProps }) => (
   <Route
     {...routeProps}

@@ -10,16 +10,23 @@ import {
 import Lozenge from '@atlaskit/lozenge';
 import Layout from '@wedgekit/layout';
 import { Title, Text } from '@wedgekit/primitives';
+import color from '@wedgekit/color';
 
 import api from '../../utils/api';
 import storage from '../../utils/storage';
-
-import './Prize.scss';
 
 const Image = styled.img`
   width: 100%;
   overflow: hidden;
   object-fit: cover;
+`;
+
+const ModalDivider = styled.div`
+  width: 100%;
+  height: 1px;
+  background: ${color.B500};
+  display: block;
+  margin: 3rem 0;
 `;
 
 export default class Prize extends React.Component {
@@ -94,7 +101,7 @@ export default class Prize extends React.Component {
             </Lozenge>
           </div>
           <Text>{prize.description}</Text>
-          <div className="modal-section-divider" />
+          <ModalDivider />
           <Layout.Grid columns={[1, 1]} areas={[]}>
             <Layout.Grid columns={[1]} areas={[]}>
               <Text style={{ textAlign: 'center' }}><strong>Tickets in Bucket</strong></Text>

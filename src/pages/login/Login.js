@@ -14,8 +14,6 @@ import api from '../../utils/api';
 import storage from '../../utils/storage';
 import history from '../../utils/history';
 
-import './Login.scss';
-
 export default class Login extends React.Component {
   constructor(props) {
     super(props);

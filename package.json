@@ -5,7 +5,6 @@
   "dependencies": {
     "@atlaskit/badge": "^9.2.2",
     "@atlaskit/lozenge": "^6.2.4",
-    "@dmsi/wedgekit": "^9.0.0",
     "@wedgekit/color": "^3.0.1",
     "@wedgekit/core": "^11.0.62",
     "@wedgekit/form": "^0.3.1",
@@ -17,11 +16,11 @@
     "history": "^4.7.2",
     "prop-types": "^15.6.2",
     "qs": "^6.6.0",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
-    "react-scripts": "^3.3.0",
+    "react-scripts": "^4.0.1",
     "redux": "^4.0.1",
     "redux-batched-actions": "^0.4.1",
     "redux-devtools-extension": "^2.13.7",
@@ -42,8 +41,5 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ],
-  "devDependencies": {
-    "node-sass": "^4.11.0"
-  }
+  ]
 }

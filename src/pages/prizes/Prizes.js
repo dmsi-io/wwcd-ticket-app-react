@@ -11,6 +11,7 @@ import Layout from '@wedgekit/layout';
 import { Text, Title } from '@wedgekit/primitives';
 import { Wedge } from '@wedgekit/illustrations';
 import { IconWidth } from '@wedgekit/icons';
+import styled from 'styled-components';
 
 import history from '../../utils/history';
 
@@ -24,8 +25,14 @@ import Header from './styled/Header';
 import Container from './styled/Container';
 import ContentWrapper from './styled/ContentWrapper';
 
-import './Prizes.scss';
 import ImageWrapper from './styled/ImageWrapper';
+
+const Footer = styled.footer`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin: 2rem 0 1rem;
+`;
 
 const handleTabChange = (view, e) => {
   e.preventDefault();
@@ -162,9 +169,9 @@ export default (props) => {
               onExit={hidePrize}
             />
           }
-          <footer>
+          <Footer>
             <Text>Built <span role="img" aria-label="Fast and Powerful">⚡️</span> with <strong>WedgeKit</strong></Text>
-          </footer>
+          </Footer>
         </ContentWrapper>
       </Scroll>
     </Container>
