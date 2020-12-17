@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import {
   Modal,
   Button,
-  ConfirmationDialog,
   Loading,
 } from '@wedgekit/core';
 import Lozenge from '@atlaskit/lozenge';
@@ -14,12 +13,14 @@ import { Title, Text } from '@wedgekit/primitives';
 import api from '../../utils/api';
 import storage from '../../utils/storage';
 
-import './Prize.scss';
-
 const Image = styled.img`
   width: 100%;
   overflow: hidden;
   object-fit: cover;
+`;
+
+const Container = styled(Layout.Grid)`
+  max-width: 500px;
 `;
 
 export default class Prize extends React.Component {
@@ -66,16 +67,8 @@ export default class Prize extends React.Component {
     }
   };
 
-  toggleConfirmationDialog = () => {
-    this.setState((prevState) => ({ confirmationOpen: !prevState.confirmationOpen }));
-  };
-
   render() {
-    const { prize, userPrize } = this.props;
-    const { ticketCount } = this.state;
-
-    const commitButtonText = `Add ${ticketCount} Ticket${ticketCount > 1 ? 's' : ''}`;
-
+    const { prize, hasSelection } = this.props;
     return (
       <Modal
         underlayClickExits
@@ -85,7 +78,7 @@ export default class Prize extends React.Component {
           this.state.saving &&
             <Loading />
         }
-        <Layout.Grid columns={[1]} areas={[]} multiplier={2}>
+        <Container columns={[1]} areas={[]} multiplier={2}>
           <Image src={prize.image} alt={prize.title} />
           <Title level={2} elementLevel={2}>{prize.title}</Title>
           <div>
@@ -94,48 +87,10 @@ export default class Prize extends React.Component {
             </Lozenge>
           </div>
           <Text>{prize.description}</Text>
-          <div className="modal-section-divider" />
-          <Layout.Grid columns={[1, 1]} areas={[]}>
-            <Layout.Grid columns={[1]} areas={[]}>
-              <Text style={{ textAlign: 'center' }}><strong>Tickets in Bucket</strong></Text>
-              <Title style={{ fontSize: '60px', textAlign: 'center' }} level={1} elementLevel={3}>{prize.committedTickets || 0}</Title>
-            </Layout.Grid>
-            <Layout.Grid columns={[1]} areas={[]}>
-              <Text style={{ textAlign: 'center' }}><strong>Your Tickets in Bucket</strong></Text>
-              <Title style={{ fontSize: '60px', textAlign: 'center' }} level={1} elementLevel={3}>{userPrize.committedTickets || 0}</Title>
-            </Layout.Grid>
-          </Layout.Grid>
-          {
-            this.props.userInfo.tickets.remaining ?
-              <Layout.Grid columns={['repeat(3, minmax(0, max-content))']} areas={[]} justify="center">
-                <Button
-                  disabled={ticketCount < 2}
-                  onClick={() => this.setState(({ ticketCount }) => ({ ticketCount: ticketCount - 1 }))}
-                >
-                  -
-                </Button>
-                <Button domain="primary" onClick={this.toggleConfirmationDialog}>{commitButtonText}</Button>
-                <Button
-                  domain="primary"
-                  disabled={ticketCount === this.props.userInfo.tickets.remaining}
-                  onClick={() => this.setState(({ ticketCount }) => ({ ticketCount: ticketCount + 1 }))}
-                >
-                  +
-                </Button>
-              </Layout.Grid> :
-              <p>You're all out of tickets</p>
-          }
-        </Layout.Grid>
-        {
-          this.state.confirmationOpen &&
-            <ConfirmationDialog
-              primaryLabel="Yes"
-              message={<Text>Are you sure you want to commit <strong>{ticketCount} ticket{ticketCount > 1 ? 's' : ''}</strong>? You cannot undo this action.</Text>}
-              primaryDomain="danger"
-              onExit={this.toggleConfirmationDialog}
-              onAction={this.commitTicket}
-            />
-        }
+          <Button domain="primary">{
+            hasSelection ? 'Swap to This' : 'Choose'
+          }</Button>
+        </Container>
       </Modal>
     );
   }

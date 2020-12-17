@@ -9,7 +9,7 @@ import { Title } from '@wedgekit/primitives';
 import ImageWrapper from '../styled/ImageWrapper';
 
 const Categories = (props) => (
-  <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
+  <Layout.Grid columns={[1, 1, 1, 1]} columnsMd={[1, 1, 1]} columnsSm={[1, 1]} areas={[]} multiplier={2}>
     {
       sortOn(
         Object.keys(props.categories).map((k) => props.categories[k]),
