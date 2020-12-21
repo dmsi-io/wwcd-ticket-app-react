@@ -23,6 +23,12 @@ const Container = styled(Layout.Grid)`
   max-width: 500px;
 `;
 
+const Strong = styled.strong`
+  text-align: center;
+  width: 100%;
+  display: block;
+`;
+
 export default class Prize extends React.Component {
   constructor(props) {
     super(props);
@@ -40,39 +46,51 @@ export default class Prize extends React.Component {
     await api.post('/users/me/tickets', {
       data: {
         attributes: {
-          ticketCount: this.state.ticketCount,
+          ticketCount: 1,
           prize: this.props.prize.id,
           user: parseInt(storage.get('userID'), 10),
         }
       }
     }, true);
 
-    const newTicketCount = await api.get(`/prizes/${this.props.prize.id}`)
-      .then(([err, { data }]) => data.attributes.committedTickets);
-    const newUserTicketCount = await api.get(`/users/me`, true)
-      .then(([err, { data }]) => data.attributes.tickets);
-    const newUserPrizes = await api.get('/users/me/prizes', true)
-      .then(([err, { data }]) => data);
-
-    this.props.updateTicketCount(this.props.prize.id, newTicketCount);
-    this.props.updateUserTicketCount(newUserTicketCount);
-    this.props.updateUserPrizes(newUserPrizes);
+    this.props.updateUserPrizes({
+      ...this.props.prize,
+      confirmed: true,
+    });
 
     this.setState({ saving: false });
   };
 
-  handleExit = () => {
-    if (!this.state.saving && !this.state.confirmationOpen) {
-      this.props.onExit();
+  getButtonTray = (selectedGift, prize) => {
+    if (selectedGift) {
+      if (selectedGift.confirmed) {
+        return (
+          <Text><Strong>You've already chosen a gift!</Strong></Text>
+        );
+      } else if (selectedGift.id === prize.id) {
+        return (<Button onClick={this.commitTicket} domain="success">Confirm Selection</Button>);
+      } else {
+        return (
+          <Button domain="primary" onClick={() => this.props.updateUserPrizes(prize)}>
+            Swap to This
+          </Button>
+        );
+      }
+    } else {
+      return (
+        <Button domain="primary" onClick={() => this.props.updateUserPrizes(prize)}>
+          Choose
+        </Button>
+      );
     }
   };
 
   render() {
-    const { prize, hasSelection } = this.props;
+    const { prize, selectedGift } = this.props;
     return (
       <Modal
         underlayClickExits
-        onExit={this.handleExit}
+        onExit={this.props.onExit}
       >
         {
           this.state.saving &&
@@ -87,9 +105,7 @@ export default class Prize extends React.Component {
             </Lozenge>
           </div>
           <Text>{prize.description}</Text>
-          <Button domain="primary">{
-            hasSelection ? 'Swap to This' : 'Choose'
-          }</Button>
+          {this.getButtonTray(selectedGift, prize)}
         </Container>
       </Modal>
     );

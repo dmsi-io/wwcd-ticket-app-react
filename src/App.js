@@ -11,7 +11,6 @@ import store from './redux/store';
 
 import storage from './utils/storage';
 import history from './utils/history';
-import poll from './utils/poll';
 import api from './utils/api';
 import { setUserInfo } from './redux/modules/userInfo';
 
@@ -38,7 +37,7 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => (
 
 class App extends React.Component {
   componentDidMount() {
-    poll(store);
+    // poll(store);
 
     if (storage.get('token')) {
       // Ensure that user still exists
