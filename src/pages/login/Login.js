@@ -45,6 +45,7 @@ export default class Login extends React.Component {
         errors: err.errors,
       });
     } else {
+      storage.remove('stateTree');
       storage.set('token', tokenData.data.attributes.token);
       storage.set('userID', tokenData.data.id);
 
