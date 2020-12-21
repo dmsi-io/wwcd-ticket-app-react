@@ -11,15 +11,13 @@ const mapStateToProps = (state, props) => ({
   prize: state.prizes[props.id],
   userPrize: state.userPrizes[props.id] || {},
   userInfo: state.userInfo,
+  selectedGift: state.userPrizes && state.userPrizes.me,
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateTicketCount: (id, count) => dispatch(updateTicketCount(id, count)),
   updateUserTicketCount: (count) => dispatch(updateUserTicketCount(count)),
-  updateUserPrizes: (prizes) => dispatch(updateUserPrizes(prizes.reduce((acc, prize) => {
-    acc[prize.id] = prize.attributes;
-    return acc;
-  }, {}))),
+  updateUserPrizes: (prize) => dispatch(updateUserPrizes({ me: prize })),
 });
 
 export default connect(

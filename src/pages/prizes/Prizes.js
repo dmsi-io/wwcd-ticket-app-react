@@ -73,7 +73,7 @@ const Prizes = (props) => {
               >
                 {[
                   { id: 'categories', label: 'Categories', href: '/prizes?view=categories' },
-                  { id: 'all', label: 'All Prizes', href: '/prizes?view=all' },
+                  { id: 'all', label: 'All Gifts', href: '/prizes?view=all' },
                 ]}
               </Tabs>
               {
@@ -93,7 +93,7 @@ const Prizes = (props) => {
                           sortOn(prizes, 'title')
                             .filter((prize) => prize.categoryId === parseInt(queryParams.categoryId, 10))
                             .map((prize) => (
-                              <Card openPrize={openPrize(prize.id)} {...prize} />
+                              <Card key={prize.id} openPrize={openPrize(prize.id)} {...prize} />
                             ))
                         }
                       </Layout.Grid>:
@@ -109,7 +109,7 @@ const Prizes = (props) => {
                 <Layout.Grid columns={[1, 1, 1, 1]} columnsMd={[1, 1, 1]} columnsSm={[1, 1]} areas={[]} multiplier={2}>
                   {
                     sortOn(queryParams.view === 'all' ? prizes : userPrizes, 'title').map((prize) => (
-                      <Card openPrize={openPrize(prize.id)} {...prize} />
+                      <Card key={prize.id} openPrize={openPrize(prize.id)} {...prize} />
                     ))
                   }
                 </Layout.Grid>
