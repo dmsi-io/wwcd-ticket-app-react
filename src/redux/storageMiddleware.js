@@ -1,7 +1,7 @@
-/** eslint-disable */
+/* eslint-disable */
 import { USER_LOGOUT } from './modules/userLogout';
 
-export default (storage) => ({ getState }) => (next) => (action) => {
+const storageMiddleware =  (storage) => ({ getState }) => (next) => (action) => {
   const result = next(action);
   const localStateTree = Object.assign({}, getState());
 
@@ -16,3 +16,5 @@ export default (storage) => ({ getState }) => (next) => (action) => {
 
   return result;
 };
+
+export default storageMiddleware;
