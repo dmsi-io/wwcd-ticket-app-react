@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import sortOn from 'sort-on';
 import qs from 'qs';
 import styled from 'styled-components';
@@ -20,6 +20,8 @@ import Container from './styled/Container';
 import ContentWrapper from './styled/ContentWrapper';
 
 import Card from './Card';
+import storage from '../../utils/storage';
+import Tutorial from './Tutorial';
 
 const Footer = styled.footer`
   width: 100%;
@@ -56,6 +58,8 @@ const openPrize = (prizeId) => () => {
 };
 
 const Prizes = (props) => {
+  const [showTutorial, setShowTutorial] = useState(true);
+
   const queryParams = qs.parse(history.location.search.replace('?', ''));
   const prizes = Object.keys(props.prizes).map((k) => props.prizes[k]);
   const userPrizes = Object.keys(props.userPrizes).map((k) => props.userPrizes[k]);
@@ -128,6 +132,10 @@ const Prizes = (props) => {
           </ContentWrapper>
         </Scroll>
       </Container>
+      {
+        showTutorial &&
+        <Tutorial onExit={() => setShowTutorial(false)} />
+      }
     </>
   );
 };

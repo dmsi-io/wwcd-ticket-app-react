@@ -61,9 +61,9 @@ export default class Prize extends React.Component {
     this.setState({ saving: false });
   };
 
-  getButtonTray = (selectedGift, prize) => {
-    if (selectedGift) {
-      if (selectedGift.confirmed) {
+  getButtonTray = (selectedGift, prize, userInfo) => {
+    if (selectedGift || userInfo.tickets.remaining === 0) {
+      if ((selectedGift && selectedGift.confirmed) || userInfo.tickets.remaining === 0) {
         return (
           <Text><Strong>You've already chosen a gift!</Strong></Text>
         );
@@ -86,7 +86,7 @@ export default class Prize extends React.Component {
   };
 
   render() {
-    const { prize, selectedGift } = this.props;
+    const { prize, selectedGift, userInfo } = this.props;
     return (
       <Modal
         underlayClickExits
@@ -105,7 +105,7 @@ export default class Prize extends React.Component {
             </Lozenge>
           </div>
           <Text>{prize.description}</Text>
-          {this.getButtonTray(selectedGift, prize)}
+          {this.getButtonTray(selectedGift, prize, userInfo)}
         </Container>
       </Modal>
     );

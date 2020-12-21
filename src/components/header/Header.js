@@ -47,7 +47,7 @@ const Header = (props) => {
       </IconWidth>
       <Title level={1} elementLevel={1}>Happy Holidays from DMSi, {props.userInfo.firstName}!</Title>
       {
-        !!props.selectedGift && !props.selectedGift.confirmed &&
+        !!props.selectedGift && !props.selectedGift.confirmed && props.userInfo.tickets.remaining !== 0 &&
         <FAB onClick={() => openPrize(props.selectedGift.id)}>Confirm Your Choice</FAB>
       }
     </UserHeader>
