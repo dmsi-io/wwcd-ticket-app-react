@@ -9,7 +9,7 @@ const getToken = () => {
   return `Bearer ${token}`;
 };
 
-export default {
+const api = {
   get: (route, authNeeded) => {
     const url = `https://api.dmsiparty.com/v1${route}`;
 
@@ -64,3 +64,5 @@ export default {
       });
   },
 }
+
+export default api;
