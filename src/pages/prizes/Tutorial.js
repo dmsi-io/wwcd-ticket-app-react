@@ -82,7 +82,7 @@ const Messages = styled.p`
 
 const messages = [
   `What a year it's been!\nWhile we aren't able to gather as a company at our yearly holiday party, we still wanted to give you something special.`,
-  `Each employee will receive one gift of their choosing. Look around by category or see all the gifts available.`,
+  `Each employee will receive one gift of their choosing. Look around by category or see all the gifts available.\nBe sure to make your selections between 12/22 and 12/25`,
   `Once you've selected one you can either confirm the gift immediately, or swap it out if you weren't quite ready.\nHappy holidays from everyone at DMSi!`,
 ];
 
