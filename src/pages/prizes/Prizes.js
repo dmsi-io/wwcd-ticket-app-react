@@ -20,7 +20,6 @@ import Container from './styled/Container';
 import ContentWrapper from './styled/ContentWrapper';
 
 import Card from './Card';
-import storage from '../../utils/storage';
 import Tutorial from './Tutorial';
 
 const Footer = styled.footer`
