@@ -1,3 +1,4 @@
+/** eslint-disable */
 import storage from './storage';
 import { USER_LOGOUT } from '../redux/modules/userLogout';
 import store from '../redux/store';

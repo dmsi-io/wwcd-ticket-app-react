@@ -1,3 +1,4 @@
+/** eslint-disable */
 const PREFIX = 'dmsiparty';
 
 export default {
