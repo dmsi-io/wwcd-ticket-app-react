@@ -1,3 +1,4 @@
+/** eslint-disable */
 import { USER_LOGOUT } from './modules/userLogout';
 
 export default (storage) => ({ getState }) => (next) => (action) => {
