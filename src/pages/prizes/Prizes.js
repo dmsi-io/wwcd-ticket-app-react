@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import sortOn from 'sort-on';
 import qs from 'qs';
 import Badge from '@atlaskit/badge';
@@ -26,6 +26,7 @@ import ContentWrapper from './styled/ContentWrapper';
 
 import './Prizes.scss';
 import ImageWrapper from './styled/ImageWrapper';
+import Tutorial from './Tutorial';
 
 const handleTabChange = (view, e) => {
   e.preventDefault();
@@ -55,18 +56,21 @@ const openPrize = (prizeId) => () => {
 };
 
 export default (props) => {
+  const [showTutorial, setShowTutorial] = useState(true);
+
   const queryParams = qs.parse(history.location.search.replace('?', ''));
   const prizes = Object.keys(props.prizes).map((k) => props.prizes[k]);
   const userPrizes = Object.keys(props.userPrizes).map((k) => props.userPrizes[k]);
 
   return (
+    <>
     <Container columns={[1]} areas={[]} multiplier={2} rows={['minmax(0, max-content)', 1]}>
       <Header>
         <Layout.Grid columns={['repeat(2, minmax(0, max-content))']} areas={[]} multiplier={2} align="center">
           <IconWidth iconWidth={32}>
             <Wedge />
           </IconWidth>
-          <Text><strong>Holiday Party</strong></Text>
+          <Text><strong>Holiday Party 2023</strong></Text>
         </Layout.Grid>
         <HeaderRight />
       </Header>
@@ -168,5 +172,10 @@ export default (props) => {
         </ContentWrapper>
       </Scroll>
     </Container>
+    {
+      showTutorial &&
+      <Tutorial onExit={() => setShowTutorial(false)} />
+    }
+    </>
   );
 };

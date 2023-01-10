@@ -6,6 +6,7 @@
     "@atlaskit/badge": "^9.2.2",
     "@atlaskit/lozenge": "^6.2.4",
     "@dmsi/wedgekit": "^9.0.0",
+    "@wedgekit/button": "^1.4.0",
     "@wedgekit/color": "^3.0.1",
     "@wedgekit/core": "^11.0.62",
     "@wedgekit/form": "^0.3.1",
