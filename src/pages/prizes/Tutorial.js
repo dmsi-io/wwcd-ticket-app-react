@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 import color from '@wedgekit/color';
-import {IconButton} from '@wedgekit/button';
 import primitives from '@wedgekit/primitives';
 
 const Overlay = styled.div`
@@ -40,11 +39,32 @@ const ButtonRow = styled.div`
 const Messages = styled.p`
   font-size: 24px;
   font-weight: 600;
-  margin: 0 10px 10px;
+  margin: 10px;
   color: ${color.N700};
   text-align: center;
   white-space: pre-wrap;
   line-height: 1.5;
+`;
+
+const Close = styled.button`
+  font-weight: 600;
+  color: ${color.N700};
+  appearance: none;
+  background: ${color.N050};
+  border-radius: 50%;
+  border: 0;
+  cursor: pointer;
+  padding: 3px 7px 5px;
+  font-size: 20px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+
+  &:hover {
+    background: ${color.N100};
+  }
+
+  &:focus {
+    background: ${color.N300};
+  }
 `;
 
 const messages = [
@@ -56,8 +76,8 @@ const Tutorial = ({ onExit }) => {
   return (
     <Overlay>
       <Container>
-        <ButtonRow>
-          <IconButton icon='close' noFill onClick={() => onExit()} />
+      <ButtonRow>
+        <Close onClick={() => onExit()}>&times;</Close>
         </ButtonRow>
         <Messages>{messages}</Messages>
       </Container>
