@@ -11,7 +11,7 @@ const getToken = () => {
 
 const api = {
   get: (route, authNeeded) => {
-    const url = `https://api.dmsiparty.com/v1${route}`;
+    const url = `https://wwcdapi-lre7slnnqq-uc.a.run.app/v1${route}`;
 
     const headers = authNeeded ?
       { authorization: getToken() } :
@@ -33,7 +33,7 @@ const api = {
       });
   },
   post: (route, body, authNeeded) => {
-    const url = `https://api.dmsiparty.com/v1${route}`;
+    const url = `https://wwcdapi-lre7slnnqq-uc.a.run.app/v1${route}`;
 
     const contentType = 'application/json';
 
