@@ -82,7 +82,7 @@ const Prizes = (props) => {
               {
                 (queryParams.view === 'categories' || !queryParams.view) &&
                 <div>
-                  <Layout.Grid columns={['minamx(0, max-content)']} justify="start" areas={[]}>
+                  <Layout.Grid columns={['minmax(0, max-content)']} justify="start" areas={[]}>
                     {
                       queryParams.categoryId ?
                         <Title level={2} elementLevel={2}>{props.categories[queryParams.categoryId].name}</Title> :
