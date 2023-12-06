@@ -3,12 +3,7 @@ export const SET_USER_INFO = 'party/userInfo/SET_USER_INFO';
 export const UPDATE_TICKET_COUNT = 'party/userInfo/UPDATE_TICKET_COUNT';
 
 // Action Creators
-export function setUserInfo({
-  firstname,
-  lastname,
-  id,
-  tickets,
-}) {
+export function setUserInfo({ firstname, lastname, id, tickets }) {
   return {
     type: SET_USER_INFO,
     firstName: firstname,

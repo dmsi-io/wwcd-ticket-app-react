@@ -12,26 +12,35 @@ const mapDispatchToProps = (dispatch) => ({
     dispatch(setUserInfo(userInfo));
   },
   setCategories: (categories) => {
-    dispatch(setCategories(categories.reduce((acc, cat) => {
-      acc[cat.id] = cat.attributes;
-      return acc;
-    }, {})))
+    dispatch(
+      setCategories(
+        categories.reduce((acc, cat) => {
+          acc[cat.id] = cat.attributes;
+          return acc;
+        }, {}),
+      ),
+    );
   },
   setPrizes: (prizes) => {
-    dispatch(setPrizes(prizes.reduce((acc, prize) => {
-      acc[prize.id] = prize.attributes;
-      return acc;
-    }, {})))
+    dispatch(
+      setPrizes(
+        prizes.reduce((acc, prize) => {
+          acc[prize.id] = prize.attributes;
+          return acc;
+        }, {}),
+      ),
+    );
   },
   setUserPrizes: (prizes) => {
-    dispatch(setUserPrizes(prizes.reduce((acc, prize) => {
-      acc[prize.id] = prize.attributes;
-      return acc;
-    }, {})))
+    dispatch(
+      setUserPrizes(
+        prizes.reduce((acc, prize) => {
+          acc[prize.id] = prize.attributes;
+          return acc;
+        }, {}),
+      ),
+    );
   },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(Login);
+export default connect(null, mapDispatchToProps)(Login);

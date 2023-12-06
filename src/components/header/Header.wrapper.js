@@ -7,7 +7,4 @@ const mapStateToProps = (state) => ({
   selectedGift: state.userPrizes && state.userPrizes.me,
 });
 
-export default connect(
-  mapStateToProps,
-  null,
-)(Header);
+export default connect(mapStateToProps, null)(Header);

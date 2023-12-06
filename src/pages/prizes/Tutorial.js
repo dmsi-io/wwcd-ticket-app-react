@@ -67,17 +67,14 @@ const Close = styled.button`
   }
 `;
 
-const messages = [
-  `Welcome to the 2023 DMSi Holiday Party!`
-];
+const messages = [`Welcome to the 2023 DMSi Holiday Party!`];
 
 const Tutorial = ({ onExit }) => {
-
   return (
     <Overlay>
       <Container>
-      <ButtonRow>
-        <Close onClick={() => onExit()}>&times;</Close>
+        <ButtonRow>
+          <Close onClick={() => onExit()}>&times;</Close>
         </ButtonRow>
         <Messages>{messages}</Messages>
       </Container>
