@@ -9,13 +9,13 @@ const getToken = () => {
   return `Bearer ${token}`;
 };
 
+const BASE_URL = 'https://wwcdapi-lre7slnnqq-uc.a.run.app/v1';
+
 const api = {
   get: (route, authNeeded) => {
-    const url = `https://wwcdapi-lre7slnnqq-uc.a.run.app/v1${route}`;
+    const url = `${BASE_URL}${route}`;
 
-    const headers = authNeeded ?
-      { authorization: getToken() } :
-      {};
+    const headers = authNeeded ? { authorization: getToken() } : {};
 
     return fetch(url, { headers })
       .then((data) => data.json())
@@ -33,16 +33,16 @@ const api = {
       });
   },
   post: (route, body, authNeeded) => {
-    const url = `https://wwcdapi-lre7slnnqq-uc.a.run.app/v1${route}`;
+    const url = `${BASE_URL}${route}`;
 
     const contentType = 'application/json';
 
-    const headers = authNeeded ?
-      {
-        authorization: getToken(),
-        'content-type': contentType,
-      } :
-      { 'content-type': contentType };
+    const headers = authNeeded
+      ? {
+          authorization: getToken(),
+          'content-type': contentType,
+        }
+      : { 'content-type': contentType };
 
     return fetch(url, {
       body: JSON.stringify(body),
@@ -63,6 +63,6 @@ const api = {
         return [undefined, data];
       });
   },
-}
+};
 
 export default api;

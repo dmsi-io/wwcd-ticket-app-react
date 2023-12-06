@@ -17,10 +17,8 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch) => ({
   updateTicketCount: (id, count) => dispatch(updateTicketCount(id, count)),
   updateUserTicketCount: (count) => dispatch(updateUserTicketCount(count)),
-  updateUserPrizes: (prize) => dispatch(updateUserPrizes({ me: prize })),
+  updateUserPrizes: (prize) =>
+    dispatch(updateUserPrizes({ [prize.id]: prize.committedTickets <= 0 ? undefined : prize })),
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Prize);
+export default connect(mapStateToProps, mapDispatchToProps)(Prize);

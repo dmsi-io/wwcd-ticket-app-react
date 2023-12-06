@@ -10,14 +10,17 @@ const Card = styled(BaseCard)`
   cursor: pointer;
 `;
 
-const PrizeCard = ({ openPrize, title, image }) => (
+const PrizeCard = ({ openPrize, title, image, multiplier }) => (
   <Card onClick={openPrize}>
     <Layout.Grid columns={[1]} areas={[]} multiplier={2}>
       <div>
         <ImageWrapper>
+          {multiplier && multiplier > 1 ? <p>x{multiplier}</p> : null}
           <img src={image} alt={title} />
         </ImageWrapper>
-        <Title level={3} elementLevel={3}>{title}</Title>
+        <Title level={3} elementLevel={3}>
+          {title}
+        </Title>
       </div>
     </Layout.Grid>
   </Card>

@@ -1,11 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  Input,
-  Button,
-  Alert,
-  Loading,
-} from '@wedgekit/core';
+import { Card, Input, Button, Alert, Loading } from '@wedgekit/core';
 import { Text, Title } from '@wedgekit/primitives';
 import Form, { Field } from '@wedgekit/form';
 import Layout from '@wedgekit/layout';
@@ -23,7 +17,7 @@ export default class Login extends React.Component {
       password: '',
       errors: [],
       loading: false,
-    }
+    };
   }
 
   handleFieldChange = (field) => (value) => {
@@ -31,11 +25,18 @@ export default class Login extends React.Component {
   };
 
   login = async ({ username, password }) => {
+    if (!username || !password) {
+      this.setState({
+        errors: [{ detail: 'Username and password are required fields.' }],
+      });
+      return;
+    }
+
     const data = {
       attributes: {
         username: username.toLowerCase(),
         password,
-      }
+      },
     };
 
     const [err, tokenData] = await api.post('/authenticate', { data });
@@ -51,17 +52,18 @@ export default class Login extends React.Component {
 
       this.setState({ loading: true });
 
-      const [prizes, userInfo, categories, userPrizes] = await Promise.all([
-        api.get('/prizes').then(([err, { data }]) => data),
-        api.get('/users/me', true).then(([err, { data }]) => data),
-        api.get('/categories', true).then(([err, { data }]) => data),
-        api.get('/users/me/prizes', true).then(([err,  { data }]) => data),
+      const { setCategories, setPrizes, setUserInfo, setUserPrizes } = this.props;
+      const [categories, prizes, userInfo, userPrizes] = await Promise.all([
+        api.get('/categories', true).then(([_, data]) => data?.data),
+        api.get('/prizes').then(([_, data]) => data?.data),
+        api.get('/users/me', true).then(([_, data]) => data?.data?.attributes),
+        api.get('/users/me/prizes', true).then(([_, data]) => data?.data),
       ]);
 
-      this.props.setUserInfo(userInfo.attributes);
-      this.props.setPrizes(prizes);
-      this.props.setCategories(categories);
-      this.props.setUserPrizes(userPrizes);
+      if (categories) this.props.setCategories(categories);
+      if (prizes) this.props.setPrizes(prizes);
+      if (userInfo) this.props.setUserInfo(userInfo);
+      if (userPrizes) this.props.setUserPrizes(userPrizes);
 
       this.setState({ loading: false });
 
@@ -82,49 +84,33 @@ export default class Login extends React.Component {
         justify="center"
         align="center"
       >
-        {
-          this.state.loading &&
-            <Loading />
-        }
+        {this.state.loading && <Loading />}
         <Card style={{ marginTop: '30vh', maxWidth: '300px' }}>
           <Form onSubmit={this.login}>
             {({ formProps }) => (
-              <form {...formProps}>
+              <form {...formProps} autocomplete="off">
                 <Layout.Grid columns={[1]} areas={[]} multiplier={2}>
-                  {
-                    this.state.errors.map((error) => (
-                      <Alert
-                        key={error.detail}
-                        onClose={this.onApiErrorClose}
-                      >
-                        {error.detail}
-                      </Alert>
-                    ))
-                  }
-                  <Title level={2} elementLevel={2}>Login</Title>
+                  {this.state.errors.map((error) => (
+                    <Alert key={error.detail} onClose={this.onApiErrorClose}>
+                      {error.detail}
+                    </Alert>
+                  ))}
+                  <Title level={2} elementLevel={2}>
+                    Login
+                  </Title>
                   <Text>Don't have your login credentials? See Tanya for your card.</Text>
-                  <Field
-                    label="Username"
-                    required
-                    defaultValue=""
-                    name="username"
-                  >
-                    {({ fieldProps }) => (
-                      <Input fullWidth {...fieldProps} />
-                    )}
+                  <Field label="Username" required defaultValue="" name="username">
+                    {({ fieldProps }) => <Input fullWidth {...fieldProps} />}
                   </Field>
-                  <Field
-                    label="Password"
-                    required
-                    defaultValue=""
-                    name="password"
-                  >
+                  <Field label="Password" required defaultValue="" name="password">
                     {({ fieldProps }) => (
-                      <Input fullWidth elementType="password" {...fieldProps} />
+                      <Input fullWidth elementType="password" autocomplete="off" {...fieldProps} />
                     )}
                   </Field>
                   <Layout.Grid columns={['minmax(0, max-content)']} areas={[]} justify="end">
-                    <Button domain="primary" type="submit">Login</Button>
+                    <Button domain="primary" type="submit">
+                      Login
+                    </Button>
                   </Layout.Grid>
                 </Layout.Grid>
               </form>

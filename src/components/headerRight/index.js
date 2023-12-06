@@ -1,2 +1,2 @@
-import HeaderRight from './HeaderRight.wrapper';
-export default HeaderRight;
+export { default } from './HeaderRight.wrapper';
+export { refresh } from './HeaderRight';
