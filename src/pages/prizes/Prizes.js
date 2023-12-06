@@ -160,46 +160,48 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
                 </div>
               )}
               {(queryParams.view === 'all' || queryParams.view === 'mine') && (
-                <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
-                  {sortOn(queryParams.view === 'all' ? prizes : userPrizes, 'title').map(
-                    (prize) => (
-                      <Card key={prize.id} onClick={openPrize(prize.id)}>
-                        <Layout.Grid
-                          columns={[1]}
-                          areas={[]}
-                          multiplier={2}
-                          rows={['minmax(0, max-content)', 1, 'minmax(0, max-content)']}
-                        >
-                          <div>
-                            <ImageWrapper>
-                              {/* Hide when showing tutorial due to coloration issues */}
-                              {!showTutorial && prize.multiplier && prize.multiplier > 1 && (
-                                <p>x{prize.multiplier}</p>
-                              )}
-                              <img src={prize.image} alt={prize.title} />
-                            </ImageWrapper>
-                            <Title level={3} elementLevel={3}>
-                              {prize.title}
-                            </Title>
-                          </div>
-                          <div />
+                <div style={{ 'padding-bottom': '10vh' }}>
+                  <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
+                    {sortOn(queryParams.view === 'all' ? prizes : userPrizes, 'title').map(
+                      (prize) => (
+                        <Card key={prize.id} onClick={openPrize(prize.id)}>
                           <Layout.Grid
-                            columns={['repeat(2, minmax(0, max-content))']}
+                            columns={[1]}
                             areas={[]}
-                            align="end"
+                            multiplier={2}
+                            rows={['minmax(0, max-content)', 1, 'minmax(0, max-content)']}
                           >
-                            {queryParams.view === 'all' ? (
-                              <Text>Total Tickets in Bucket:</Text>
-                            ) : (
-                              <Text>My Tickets in Bucket:</Text>
-                            )}
-                            <Badge max={null}>{prize.committedTickets}</Badge>
+                            <div>
+                              <ImageWrapper>
+                                {/* Hide when showing tutorial due to coloration issues */}
+                                {!showTutorial && prize.multiplier && prize.multiplier > 1 && (
+                                  <p>x{prize.multiplier}</p>
+                                )}
+                                <img src={prize.image} alt={prize.title} />
+                              </ImageWrapper>
+                              <Title level={3} elementLevel={3}>
+                                {prize.title}
+                              </Title>
+                            </div>
+                            <div />
+                            <Layout.Grid
+                              columns={['repeat(2, minmax(0, max-content))']}
+                              areas={[]}
+                              align="end"
+                            >
+                              {queryParams.view === 'all' ? (
+                                <Text>Total Tickets in Bucket:</Text>
+                              ) : (
+                                <Text>My Tickets in Bucket:</Text>
+                              )}
+                              <Badge max={null}>{prize.committedTickets}</Badge>
+                            </Layout.Grid>
                           </Layout.Grid>
-                        </Layout.Grid>
-                      </Card>
-                    ),
-                  )}
-                </Layout.Grid>
+                        </Card>
+                      ),
+                    )}
+                  </Layout.Grid>
+                </div>
               )}
             </Layout.Grid>
             {queryParams.prizeId && <Prize id={queryParams.prizeId} onExit={hidePrize} />}
