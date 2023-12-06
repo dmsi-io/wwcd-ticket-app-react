@@ -63,13 +63,11 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
   const [showTutorial, setShowTutorial] = useState(
     queryParams.prizeId === undefined && userPrizes.length === 0,
   );
-  const [intervalHandle, setIntervalHandle] = useState(null);
   useEffect(() => {
     const handle = setInterval(() => {
       refresh();
       // Reload every 5 minutes
     }, 300000);
-    setIntervalHandle(handle);
 
     return () => {
       clearInterval(handle);
@@ -90,7 +88,7 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
               <Wedge />
             </IconWidth>
             <Text>
-              <strong>Holiday Party {new Date().getFullYear()}</strong>
+              <strong>{document.title}</strong>
             </Text>
           </Layout.Grid>
           <HeaderRight />

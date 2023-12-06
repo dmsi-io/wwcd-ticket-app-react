@@ -31,6 +31,8 @@ const PrivateRoute = ({ component: Component, ...routeProps }) => (
 
 class App extends React.Component {
   componentDidMount() {
+    document.title = `Holiday Party ${new Date().getFullYear()}`;
+
     // poll(store);
 
     if (storage.get('token')) {
