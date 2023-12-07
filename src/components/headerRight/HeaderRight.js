@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dropdown } from '@wedgekit/core';
+import { Button } from '@wedgekit/core';
 
 import { USER_LOGOUT } from '../../redux/modules/userLogout';
 import store from '../../redux/store';
@@ -10,39 +10,29 @@ const logout = () => {
   window.location.href = '/';
 };
 
-const refresh = async ({
-   setUserInfo,
-   setPrizes,
-   setCategories,
-   setUserPrizes,
- }) => {
-  const [prizes, userInfo, categories, userPrizes] = await Promise.all([
-    api.get('/prizes').then(([err, { data }]) => data),
-    api.get('/users/me', true).then(([err, { data }]) => data),
-    api.get('/categories', true).then(([err, { data }]) => data),
-    api.get('/users/me/prizes', true).then(([err,  { data }]) => data),
-  ]);
+export const refresh =
+  ({ setCategories, setPrizes, setUserInfo, setUserPrizes }) =>
+  async () => {
+    const [prizes, userInfo, categories, userPrizes] = await Promise.all([
+      api.get('/prizes').then(([_, data]) => data),
+      api.get('/users/me', true).then(([_, data]) => data),
+      api.get('/categories', true).then(([_, data]) => data),
+      api.get('/users/me/prizes', true).then(([_, data]) => data),
+    ]);
 
-  setUserInfo(userInfo.attributes);
-  setPrizes(prizes);
-  setCategories(categories);
-  setUserPrizes(userPrizes);
-};
+    if (userInfo.data) setUserInfo(userInfo.data.attributes);
+    if (prizes.data) setPrizes(prizes.data);
+    if (categories.data) setCategories(categories.data);
+    if (userPrizes.data) setUserPrizes(userPrizes.data);
+  };
 
 export default (props) => (
-  <Dropdown
-    label="Settings"
-    options={[
-      { id: 'refresh', display: 'Refresh Data' },
-      { id: 'logout', display: 'Logout' },
-    ]}
-    subtle
-    onSelect={(s) => {
-      if (s === 'logout') {
-        logout();
-      } else if (s === 'refresh') {
-        refresh(props);
-      }
-    }}
-  />
-)
+  <div style={{ display: 'flex', 'flex-direction': 'row' }}>
+    <Button key="refresh" onClick={refresh(props)} domain="primary" style={{ 'margin-right': 10 }}>
+      Refresh
+    </Button>
+    <Button key="logout" onClick={logout} domain="primary">
+      Logout
+    </Button>
+  </div>
+);

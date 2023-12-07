@@ -20,10 +20,7 @@ export function updateTicketCount(id, committedTickets) {
 const initialState = {};
 
 // Reducer
-export default function categories(
-  state = initialState,
-  action = { type: '' },
-) {
+export default function categories(state = initialState, action = { type: '' }) {
   switch (action.type) {
     case SET_PRIZES:
       return {

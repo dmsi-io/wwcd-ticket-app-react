@@ -8,30 +8,39 @@ import { setUserPrizes } from '../../redux/modules/userPrizes';
 import HeaderRight from './HeaderRight';
 
 const mapDispatchToProps = (dispatch) => ({
+  setCategories: (categories) => {
+    dispatch(
+      setCategories(
+        categories.reduce((acc, cat) => {
+          acc[cat.id] = cat.attributes;
+          return acc;
+        }, {}),
+      ),
+    );
+  },
+  setPrizes: (prizes) => {
+    dispatch(
+      setPrizes(
+        prizes.reduce((acc, prize) => {
+          acc[prize.id] = prize.attributes;
+          return acc;
+        }, {}),
+      ),
+    );
+  },
   setUserInfo: (userInfo) => {
     dispatch(setUserInfo(userInfo));
   },
-  setCategories: (categories) => {
-    dispatch(setCategories(categories.reduce((acc, cat) => {
-      acc[cat.id] = cat.attributes;
-      return acc;
-    }, {})))
-  },
-  setPrizes: (prizes) => {
-    dispatch(setPrizes(prizes.reduce((acc, prize) => {
-      acc[prize.id] = prize.attributes;
-      return acc;
-    }, {})))
-  },
   setUserPrizes: (prizes) => {
-    dispatch(setUserPrizes(prizes.reduce((acc, prize) => {
-      acc[prize.id] = prize.attributes;
-      return acc;
-    }, {})))
+    dispatch(
+      setUserPrizes(
+        prizes.reduce((acc, prize) => {
+          acc[prize.id] = prize.attributes;
+          return acc;
+        }, {}),
+      ),
+    );
   },
 });
 
-export default connect(
-  null,
-  mapDispatchToProps,
-)(HeaderRight);
+export default connect(null, mapDispatchToProps)(HeaderRight);

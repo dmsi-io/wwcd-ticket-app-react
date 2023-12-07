@@ -19,10 +19,7 @@ export function updateUserPrizes(prizes) {
 const initialState = {};
 
 // Reducer
-export default function categories(
-  state = initialState,
-  action = { type: '' },
-) {
+export default function categories(state = initialState, action = { type: '' }) {
   switch (action.type) {
     case SET_USER_PRIZES:
       return {

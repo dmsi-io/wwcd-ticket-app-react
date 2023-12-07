@@ -11,10 +11,7 @@ export function setCategories(categories) {
 const initialState = {};
 
 // Reducer
-export default function categories(
-  state = initialState,
-  action = { type: '' },
-) {
+export default function categories(state = initialState, action = { type: '' }) {
   switch (action.type) {
     case SET_CATEGORIES:
       return {

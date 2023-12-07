@@ -1,11 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-  Modal,
-  Button,
-  Loading,
-} from '@wedgekit/core';
+import { Alert, Button, Input, Loading, Modal } from '@wedgekit/core';
 import Lozenge from '@atlaskit/lozenge';
 import Layout from '@wedgekit/layout';
 import { Title, Text } from '@wedgekit/primitives';
@@ -23,89 +19,165 @@ const Container = styled(Layout.Grid)`
   max-width: 500px;
 `;
 
-const Strong = styled.strong`
-  text-align: center;
-  width: 100%;
-  display: block;
-`;
-
 export default class Prize extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      confirmationOpen: false,
+      errors: [],
       ticketCount: 1,
       saving: false,
     };
   }
 
   commitTicket = async () => {
-    this.setState({ saving: true, confirmationOpen: false });
+    this.setState({ saving: true });
+    const { ticketCount } = this.state;
+    const { prize, updateUserPrizes, updateUserTicketCount, userInfo } = this.props;
 
-    await api.post('/users/me/tickets', {
-      data: {
-        attributes: {
-          ticketCount: 1,
-          prize: this.props.prize.id,
-          user: parseInt(storage.get('userID'), 10),
-        }
-      }
-    }, true);
+    const [err] = await api.post(
+      '/users/me/tickets',
+      {
+        data: {
+          attributes: {
+            ticketCount,
+            prize: prize.id,
+            user: Number.parseInt(storage.get('userID'), 10),
+          },
+        },
+      },
+      true,
+    );
 
-    this.props.updateUserPrizes({
-      ...this.props.prize,
-      confirmed: true,
+    if (err) {
+      this.setState({
+        errors: err.errors,
+        saving: false,
+      });
+      return;
+    }
+
+    updateUserPrizes({
+      ...prize,
+      committedTickets: ticketCount,
+    });
+    const { total, remaining } = userInfo.tickets;
+    updateUserTicketCount({
+      total,
+      remaining: remaining - ticketCount,
     });
 
-    this.setState({ saving: false });
+    this.setState({ saving: false, ticketCount: 1 });
   };
 
-  getButtonTray = (selectedGift, prize, userInfo) => {
-    if (selectedGift || userInfo.tickets.remaining === 0) {
-      if ((selectedGift && selectedGift.confirmed) || userInfo.tickets.remaining === 0) {
-        return (
-          <Text><Strong>You've already chosen a gift!</Strong></Text>
-        );
-      } else if (selectedGift.id === prize.id) {
-        return (<Button onClick={this.commitTicket} domain="success">Confirm Selection</Button>);
-      } else {
-        return (
-          <Button domain="primary" onClick={() => this.props.updateUserPrizes(prize)}>
-            Swap to This
-          </Button>
-        );
-      }
-    } else {
+  uncommitTicket = async () => {
+    this.setState({ saving: true });
+    const { prize, updateUserPrizes, updateUserTicketCount, userInfo, userPrize } = this.props;
+
+    const [err] = await api.post(
+      '/users/me/removetickets',
+      {
+        data: {
+          attributes: {
+            prize: prize.id,
+            user: Number.parseInt(storage.get('userID'), 10),
+          },
+        },
+      },
+      true,
+    );
+
+    if (err) {
+      this.setState({
+        errors: err.errors,
+        saving: false,
+      });
+      return;
+    }
+
+    updateUserPrizes({
+      ...prize,
+      committedTickets: 0,
+    });
+    const { total, remaining } = userInfo.tickets;
+    updateUserTicketCount({
+      total,
+      remaining: remaining + userPrize.committedTickets,
+    });
+
+    this.setState({ saving: false, ticketCount: 1 });
+  };
+
+  getButtonTray = () => {
+    const { userInfo, userPrize } = this.props;
+    if (userPrize.committedTickets) {
       return (
-        <Button domain="primary" onClick={() => this.props.updateUserPrizes(prize)}>
-          Choose
+        <Button domain="danger" onClick={this.uncommitTicket}>
+          {`Remove ${userPrize.committedTickets} Ticket${
+            userPrize.committedTickets === 1 ? '' : 's'
+          }`}
         </Button>
+      );
+    } else {
+      const { ticketCount } = this.state;
+      const { remaining } = userInfo.tickets;
+      return (
+        <>
+          <Input
+            elementType="number"
+            label={`Ticket Count (${remaining} remaining)`}
+            disabled={remaining === 1}
+            max={remaining}
+            min={1}
+            value={ticketCount}
+            onChange={(ticketCount) =>
+              this.setState({ ticketCount: Number.parseInt(ticketCount, 10) })
+            }
+          />
+          <Button domain="primary" onClick={this.commitTicket}>
+            {`Add Ticket${ticketCount === 1 ? '' : 's'}`}
+          </Button>
+        </>
       );
     }
   };
 
   render() {
-    const { prize, selectedGift, userInfo } = this.props;
+    const { categories, prize, onExit } = this.props;
+    const { errors } = this.state;
     return (
-      <Modal
-        underlayClickExits
-        onExit={this.props.onExit}
-      >
-        {
-          this.state.saving &&
-            <Loading />
-        }
+      <Modal underlayClickExits onExit={onExit}>
+        {this.state.saving && <Loading />}
         <Container columns={[1]} areas={[]} multiplier={2}>
+          {errors &&
+            errors.length > 0 &&
+            errors.map((error, i) => (
+              <Alert
+                key={error.detail}
+                onClose={() =>
+                  this.setState({ errors: [...errors.slice(0, i), ...errors.slice(i + 1)] })
+                }
+              >
+                {error.detail}
+              </Alert>
+            ))}
           <Image src={prize.image} alt={prize.title} />
-          <Title level={2} elementLevel={2}>{prize.title}</Title>
-          <div>
-            <Lozenge>
-              {this.props.categories[prize.categoryId].name}
-            </Lozenge>
+          <Title level={2} elementLevel={2}>
+            {prize.title}
+          </Title>
+          <div style={{ display: 'flex', 'flex-direction': 'row' }}>
+            <Lozenge>{categories[prize.categoryId].name}</Lozenge>
+            <div style={{ 'margin-left': 10 }}>
+              <Lozenge>Total Tickets in Bucket: {prize.committedTickets}</Lozenge>
+            </div>
+            {prize.multiplier && prize.multiplier > 1 && (
+              <div style={{ 'margin-left': 10 }}>
+                <Lozenge>Drawings: {prize.multiplier}</Lozenge>
+              </div>
+            )}
           </div>
           <Text>{prize.description}</Text>
-          {this.getButtonTray(selectedGift, prize, userInfo)}
+          {this.getButtonTray()}
         </Container>
       </Modal>
     );
