@@ -7,7 +7,7 @@
     "@atlaskit/lozenge": "^6.2.4",
     "@babel/core": "^7.16.0",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.3",
-    "@svgr/webpack": "^5.5.0",
+    "@svgr/webpack": "^8.1.0",
     "@wedgekit/color": "^3.0.1",
     "@wedgekit/core": "^11.0.62",
     "@wedgekit/form": "^0.3.1",
