@@ -165,13 +165,29 @@ export default class Prize extends React.Component {
           <Title level={2} elementLevel={2}>
             {prize.title}
           </Title>
-          <div style={{ display: 'flex', 'flex-direction': 'row' }}>
-            <Lozenge>{categories[prize.categoryId].name}</Lozenge>
-            <div style={{ 'margin-left': 10 }}>
-              <Lozenge>Total Tickets in Bucket: {prize.committedTickets}</Lozenge>
+          <div
+            style={{
+              display: 'flex',
+              'flex-direction': 'row',
+              'flex-wrap': 'wrap',
+              'margin-top': '-10px',
+            }}
+          >
+            <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+              <Lozenge>{categories[prize.categoryId].name}</Lozenge>
             </div>
+            {prize.committedTickets && (
+              <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+                <Lozenge>Tickets in Bucket: {prize.committedTickets}</Lozenge>
+              </div>
+            )}
+            {prize.committedUsers && (
+              <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+                <Lozenge># of Users in Bucket: {prize.committedUsers}</Lozenge>
+              </div>
+            )}
             {prize.multiplier && prize.multiplier > 1 && (
-              <div style={{ 'margin-left': 10 }}>
+              <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
                 <Lozenge>Drawings: {prize.multiplier}</Lozenge>
               </div>
             )}
