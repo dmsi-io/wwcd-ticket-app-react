@@ -105,7 +105,7 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
                 ]}
               </Tabs>
               {(queryParams.view === 'categories' || !queryParams.view) && (
-                <div>
+                <div style={{ 'padding-bottom': '10vh' }}>
                   <Layout.Grid columns={['minamx(0, max-content)']} justify="end" areas={[]}>
                     <div style={{ 'margin-bottom': '20px' }}>
                       <Title level={2} elementLevel={2}>
