@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import sortOn from 'sort-on';
+import styled from 'styled-components';
 
 import Layout from '@wedgekit/layout';
 import { Card } from '@wedgekit/core';
@@ -8,8 +9,12 @@ import { Title } from '@wedgekit/primitives';
 
 import ImageWrapper from '../styled/ImageWrapper';
 
+const Container = styled(Layout.Grid)`
+  padding-bottom: 5vh;
+`;
+
 const Categories = (props) => (
-  <Layout.Grid
+  <Container
     columns={[1, 1, 1, 1]}
     columnsMd={[1, 1, 1]}
     columnsSm={[1, 1]}
@@ -31,7 +36,7 @@ const Categories = (props) => (
         </Layout.Grid>
       </Card>
     ))}
-  </Layout.Grid>
+  </Container>
 );
 
 Categories.propTypes = {
