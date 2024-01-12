@@ -15,7 +15,7 @@ const api = {
   get: (route, authNeeded) => {
     const url = `${BASE_URL}${route}`;
 
-    const headers = authNeeded ? { authorization: getToken() } : {};
+    const headers = { authorization: authNeeded ? getToken() : undefined, cache: 'no-store' };
 
     return fetch(url, { headers })
       .then((data) => data.json())
