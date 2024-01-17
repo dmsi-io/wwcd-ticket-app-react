@@ -67,7 +67,7 @@ const Close = styled.button`
   }
 `;
 
-const messages = [`Welcome to the 2023 DMSi Holiday Party!`];
+const messages = [`Welcome to the 2024 DMSi Holiday Party!`];
 
 const Tutorial = ({ onExit }) => {
   return (
