@@ -16,6 +16,8 @@ const storageMiddleware =
       storage.remove('userID');
       storage.remove('token');
       storage.remove('lastChecked');
+    } else {
+      storage.set('lastAccessed', new Date());
     }
 
     return result;

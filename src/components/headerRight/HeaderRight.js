@@ -11,8 +11,10 @@ const logout = () => {
 };
 
 export const refresh =
-  ({ setCategories, setPrizes, setUserInfo, setUserPrizes }) =>
+  ({ reset, setCategories, setPrizes, setUserInfo, setUserPrizes }) =>
   async () => {
+    reset();
+
     const [prizes, userInfo, categories, userPrizes] = await Promise.all([
       api.get('/prizes').then(([_, data]) => data),
       api.get('/users/me', true).then(([_, data]) => data),

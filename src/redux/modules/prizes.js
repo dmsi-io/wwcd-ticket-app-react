@@ -1,4 +1,6 @@
 // Actions
+import { RESET } from '../constants';
+
 export const SET_PRIZES = 'party/prizes/SET_PRIZES';
 export const UPDATE_PRIZE_TICKET_COUNT = 'party/prizes/UPDATE_PRIZE_TICKET_COUNT';
 
@@ -35,6 +37,8 @@ export default function categories(state = initialState, action = { type: '' }) 
           committedTickets: action.committedTickets,
         },
       };
+    case RESET:
+      return { ...initialState };
     default:
       return state;
   }

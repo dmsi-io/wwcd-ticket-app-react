@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import sortOn from 'sort-on';
+import React, { useEffect, useMemo, useState } from 'react';
 import qs from 'qs';
 import Badge from '@atlaskit/badge';
 
@@ -16,14 +15,17 @@ import UserHeader from '../../components/header';
 import { Prize } from '../';
 import HeaderRight from '../../components/headerRight';
 
+import BadgeContainer from './styled/BadgeContainer';
+import CardContent from './styled/CardContent';
 import Container from './styled/Container';
 import ContentWrapper from './styled/ContentWrapper';
 import Footer from './styled/Footer';
 import FooterText from './styled/FooterText';
 import Header from './styled/Header';
-import Scroll from './styled/Scroll';
-
 import ImageWrapper from './styled/ImageWrapper';
+import Scroll from './styled/Scroll';
+import TabContainer from './styled/TabContainer';
+
 import Tutorial from './Tutorial';
 
 const handleTabChange = (view, e) => {
@@ -57,8 +59,63 @@ const openPrize = (prizeId) => () => {
   );
 };
 
-export default ({ categories, prizes, refresh, userPrizes }) => {
+const SORT_ORDER = {
+  NAME_ASC: 0,
+  NAME_DESC: 1,
+  TICKET_ASC: 2,
+  TICKET_DESC: 3,
+  TICKET_PER_PRIZE_ASC: 4,
+  TICKET_PER_PRIZE_DESC: 5,
+  AVG_TICKET_ASC: 6,
+  AVG_TICKET_DESC: 7,
+};
+
+const sortName = (ascending) => (a, b) =>
+  a.title.toLowerCase().localeCompare(b.title.toLowerCase()) * (ascending ? 1 : -1);
+const sortTickets = (ascending) => (a, b) => {
+  const aTix = a.committedTickets;
+  const bTix = b.committedTickets;
+  return aTix === bTix ? sortName(ascending)(a, b) : (aTix < bTix ? 1 : -1) * (ascending ? 1 : -1);
+};
+const sortTicketsPerPrize = (ascending) => (a, b) => {
+  const aTix = a.committedTickets / a.multiplier;
+  const bTix = b.committedTickets / b.multiplier;
+  return aTix === bTix ? sortName(ascending)(a, b) : (aTix < bTix ? 1 : -1) * (ascending ? 1 : -1);
+};
+const sortAvgTickets = (ascending) => (a, b) => {
+  const aTix = a.committedTickets / a.committedUsers;
+  const bTix = b.committedTickets / b.committedUsers;
+  return aTix === bTix ? sortName(ascending)(a, b) : (aTix < bTix ? 1 : -1) * (ascending ? 1 : -1);
+};
+
+export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, userPrizes }) => {
   const queryParams = qs.parse(history.location.search.replace('?', ''));
+
+  const [sortOrder, setSortOrder] = useState(SORT_ORDER.NAME_ASC);
+  const prizes = useMemo(() => {
+    return (queryParams.view === 'mine' ? userPrizes : propPrizes).slice().sort(
+      (() => {
+        switch (sortOrder) {
+          case SORT_ORDER.NAME_DESC:
+            return sortName(false);
+          case SORT_ORDER.TICKET_ASC:
+            return sortTickets(true);
+          case SORT_ORDER.TICKET_DESC:
+            return sortTickets(false);
+          case SORT_ORDER.TICKET_PER_PRIZE_ASC:
+            return sortTicketsPerPrize(true);
+          case SORT_ORDER.TICKET_PER_PRIZE_DESC:
+            return sortTicketsPerPrize(false);
+          case SORT_ORDER.AVG_TICKET_ASC:
+            return sortAvgTickets(true);
+          case SORT_ORDER.AVG_TICKET_DESC:
+            return sortAvgTickets(false);
+          default:
+            return sortName(true);
+        }
+      })(),
+    );
+  }, [sortOrder, queryParams.view, propPrizes]);
 
   const [showTutorial, setShowTutorial] = useState(
     queryParams.prizeId === undefined && userPrizes.length === 0,
@@ -73,6 +130,97 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
       clearInterval(handle);
     };
   }, []);
+
+  const ScrollHeader = () => (
+    <Layout.Grid columns={['minmax(0, 1fr)', 'minmax(0, max-content)']} areas={[]}>
+      <div style={{ 'margin-bottom': '12px' }}>
+        <Title level={2} elementLevel={2}>
+          {(() => {
+            switch (queryParams.view) {
+              case 'all':
+                return 'All Prizes';
+              case 'mine':
+                return 'My Selections';
+              default: {
+                if (queryParams.categoryId) {
+                  return categories[queryParams.categoryId].name;
+                } else {
+                  return 'All Categories';
+                }
+              }
+            }
+          })()}
+        </Title>
+      </div>
+      {(queryParams.view !== 'categories' || !!queryParams.categoryId) && (
+        <div
+          style={{ 'margin-bottom': '12px' }}
+          onClick={() =>
+            setSortOrder(
+              (o) =>
+                (o + 1) %
+                (Object.values(SORT_ORDER).length - (queryParams.view === 'mine' ? 2 : 0)),
+            )
+          }
+        >
+          <Title level={3} elementLevel={3}>
+            {(() => {
+              switch (sortOrder) {
+                case SORT_ORDER.NAME_DESC:
+                  return 'Name ↑';
+                case SORT_ORDER.TICKET_ASC:
+                  return 'Tickets ↓';
+                case SORT_ORDER.TICKET_DESC:
+                  return 'Tickets ↑';
+                case SORT_ORDER.TICKET_PER_PRIZE_ASC:
+                  return 'Tickets/Prize ↓';
+                case SORT_ORDER.TICKET_PER_PRIZE_DESC:
+                  return 'Tickets/Prize ↑';
+                case SORT_ORDER.AVG_TICKET_ASC:
+                  return 'Avg Tickets ↓';
+                case SORT_ORDER.AVG_TICKET_DESC:
+                  return 'Avg Tickets ↑';
+                default:
+                  return 'Name ↓';
+              }
+            })()}
+          </Title>
+        </div>
+      )}
+    </Layout.Grid>
+  );
+  const TicketCount = ({ prize }) => {
+    if (sortOrder === SORT_ORDER.AVG_TICKET_ASC || sortOrder === SORT_ORDER.AVG_TICKET_DESC) {
+      return (
+        <>
+          <Text>Tickets per User:</Text>
+          <BadgeContainer>
+            <Badge max={null}>
+              {Math.floor((prize.committedTickets / prize.committedUsers) * 100) / 100}
+            </Badge>
+          </BadgeContainer>
+        </>
+      );
+    } else if (queryParams.view === 'all') {
+      return (
+        <>
+          <Text>Total Tickets in Bucket:</Text>
+          <BadgeContainer>
+            <Badge max={null}>{prize.committedTickets}</Badge>
+          </BadgeContainer>
+        </>
+      );
+    } else {
+      return (
+        <>
+          <Text>My Tickets in Bucket:</Text>
+          <BadgeContainer>
+            <Badge max={null}>{prize.committedTickets}</Badge>
+          </BadgeContainer>
+        </>
+      );
+    }
+  };
 
   return (
     <>
@@ -97,33 +245,34 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
           <ContentWrapper>
             <UserHeader />
             <Layout.Grid columns={[1]} areas={[]} multiplier={3}>
-              <Tabs value={queryParams.view || 'categories'} onChange={handleTabChange}>
-                {[
-                  { id: 'categories', label: 'Categories', href: '/prizes?view=categories' },
-                  { id: 'all', label: 'All Prizes', href: '/prizes?view=all' },
-                  { id: 'mine', label: 'My Entries', href: '/prizes?view=mine' },
-                ]}
-              </Tabs>
-              {(queryParams.view === 'categories' || !queryParams.view) && (
+              <TabContainer>
+                <Tabs value={queryParams.view || 'categories'} onChange={handleTabChange}>
+                  {[
+                    { id: 'categories', label: 'Categories', href: '/prizes?view=categories' },
+                    { id: 'all', label: 'All Prizes', href: '/prizes?view=all' },
+                    { id: 'mine', label: 'My Entries', href: '/prizes?view=mine' },
+                  ]}
+                </Tabs>
+                <Text>
+                  Tickets remaining: <Badge max={null}>{ticketsRemaining}</Badge>
+                </Text>
+              </TabContainer>
+              {queryParams.view === 'categories' || !queryParams.view ? (
                 <div style={{ 'padding-bottom': '10vh' }}>
-                  <Layout.Grid columns={['minamx(0, max-content)']} justify="end" areas={[]}>
-                    <div style={{ 'margin-bottom': '20px' }}>
-                      <Title level={2} elementLevel={2}>
-                        {queryParams.categoryId
-                          ? categories[queryParams.categoryId].name
-                          : 'All Categories'}
-                      </Title>
-                    </div>
-                  </Layout.Grid>
+                  <ScrollHeader />
                   {queryParams.categoryId ? (
-                    <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
-                      {sortOn(prizes, 'title')
+                    <Layout.Grid
+                      columns={['repeat(auto-fill, minmax(200px, 0.5fr))']}
+                      areas={[]}
+                      multiplier={2}
+                    >
+                      {prizes
                         .filter(
                           (prize) => prize.categoryId === parseInt(queryParams.categoryId, 10),
                         )
                         .map((prize) => (
                           <Card key={prize.id} onClick={openPrize(prize.id)}>
-                            <Layout.Grid
+                            <CardContent
                               columns={[1]}
                               areas={[]}
                               multiplier={2}
@@ -147,10 +296,9 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
                                 areas={[]}
                                 align="end"
                               >
-                                <Text>Total Tickets in Bucket:</Text>
-                                <Badge max={null}>{prize.committedTickets}</Badge>
+                                <TicketCount prize={prize} />
                               </Layout.Grid>
-                            </Layout.Grid>
+                            </CardContent>
                           </Card>
                         ))}
                     </Layout.Grid>
@@ -158,48 +306,47 @@ export default ({ categories, prizes, refresh, userPrizes }) => {
                     <Categories categories={categories} onClick={openCategory} />
                   )}
                 </div>
+              ) : (
+                <ScrollHeader />
               )}
               {(queryParams.view === 'all' || queryParams.view === 'mine') && (
                 <div style={{ 'padding-bottom': '10vh' }}>
-                  <Layout.Grid columns={[1, 1]} areas={[]} multiplier={2}>
-                    {sortOn(queryParams.view === 'all' ? prizes : userPrizes, 'title').map(
-                      (prize) => (
-                        <Card key={prize.id} onClick={openPrize(prize.id)}>
-                          <Layout.Grid
-                            columns={[1]}
-                            areas={[]}
-                            multiplier={2}
-                            rows={['minmax(0, max-content)', 1, 'minmax(0, max-content)']}
-                          >
-                            <div>
-                              <ImageWrapper>
-                                {/* Hide when showing tutorial due to coloration issues */}
-                                {!showTutorial && prize.multiplier && prize.multiplier > 1 && (
-                                  <p>x{prize.multiplier}</p>
-                                )}
-                                <img src={prize.image} alt={prize.title} />
-                              </ImageWrapper>
-                              <Title level={3} elementLevel={3}>
-                                {prize.title}
-                              </Title>
-                            </div>
-                            <div />
-                            <Layout.Grid
-                              columns={['repeat(2, minmax(0, max-content))']}
-                              areas={[]}
-                              align="end"
-                            >
-                              {queryParams.view === 'all' ? (
-                                <Text>Total Tickets in Bucket:</Text>
-                              ) : (
-                                <Text>My Tickets in Bucket:</Text>
+                  <Layout.Grid
+                    columns={['repeat(auto-fill, minmax(200px, 0.5fr))']}
+                    areas={[]}
+                    multiplier={2}
+                  >
+                    {prizes.map((prize) => (
+                      <Card key={prize.id} onClick={openPrize(prize.id)}>
+                        <CardContent
+                          columns={[1]}
+                          areas={[]}
+                          multiplier={2}
+                          rows={['minmax(0, 1fr)', '0', 'auto']}
+                        >
+                          <div>
+                            <ImageWrapper>
+                              {/* Hide when showing tutorial due to coloration issues */}
+                              {!showTutorial && prize.multiplier && prize.multiplier > 1 && (
+                                <p>x{prize.multiplier}</p>
                               )}
-                              <Badge max={null}>{prize.committedTickets}</Badge>
-                            </Layout.Grid>
+                              <img src={prize.image} alt={prize.title} />
+                            </ImageWrapper>
+                            <Title level={3} elementLevel={3}>
+                              {prize.title}
+                            </Title>
+                          </div>
+                          <div />
+                          <Layout.Grid
+                            columns={['repeat(2, minmax(0, max-content))']}
+                            areas={[]}
+                            align="end"
+                          >
+                            <TicketCount prize={prize} />
                           </Layout.Grid>
-                        </Card>
-                      ),
-                    )}
+                        </CardContent>
+                      </Card>
+                    ))}
                   </Layout.Grid>
                 </div>
               )}

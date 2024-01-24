@@ -8,15 +8,45 @@ import { Title, Text } from '@wedgekit/primitives';
 
 import api from '../../utils/api';
 import storage from '../../utils/storage';
-
-const Image = styled.img`
-  width: 100%;
-  overflow: hidden;
-  object-fit: cover;
-`;
+import colors from '@wedgekit/color';
 
 const Container = styled(Layout.Grid)`
+  max-height: 75vh;
   max-width: 500px;
+`;
+
+const ImageContainer = styled.div`
+  width: 100%;
+  height: 0;
+  padding-bottom: 100%;
+  overflow: hidden;
+  position: relative;
+
+  p {
+    background-color: ${colors.R500};
+    border-radius: 50%;
+    height: 2em;
+    width: 2em;
+    font-size: 1.5em;
+    line-height: 2em;
+    text-align: center;
+    vertical-align: middle;
+    color: ${colors.N050};
+
+    position: absolute;
+    top: -0.5em;
+    right: 0.5em;
+    z-index: 1;
+  }
+
+  img {
+    object-fit: cover;
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    overflow: hidden;
+  }
 `;
 
 export default class Prize extends React.Component {
@@ -109,7 +139,7 @@ export default class Prize extends React.Component {
   };
 
   getButtonTray = () => {
-    const { userInfo, userPrize } = this.props;
+    const { userPrize } = this.props;
     if (userPrize.committedTickets) {
       return (
         <Button domain="danger" onClick={this.uncommitTicket}>
@@ -120,13 +150,13 @@ export default class Prize extends React.Component {
       );
     } else {
       const { ticketCount } = this.state;
-      const { remaining } = userInfo.tickets;
+      const { remaining } = this.props.userInfo.tickets;
       return (
         <>
           <Input
             elementType="number"
             label={`Ticket Count (${remaining} remaining)`}
-            disabled={remaining === 1}
+            disabled={remaining <= 1}
             max={remaining}
             min={1}
             value={ticketCount}
@@ -134,7 +164,7 @@ export default class Prize extends React.Component {
               this.setState({ ticketCount: Number.parseInt(ticketCount, 10) })
             }
           />
-          <Button domain="primary" onClick={this.commitTicket}>
+          <Button domain="primary" onClick={this.commitTicket} disabled={ticketCount > remaining}>
             {`Add Ticket${ticketCount === 1 ? '' : 's'}`}
           </Button>
         </>
@@ -161,7 +191,10 @@ export default class Prize extends React.Component {
                 {error.detail}
               </Alert>
             ))}
-          <Image src={prize.image} alt={prize.title} />
+          <ImageContainer>
+            <img src={prize.image} alt={prize.title} />
+            {prize.multiplier && prize.multiplier > 1 && <p>x{prize.multiplier}</p>}
+          </ImageContainer>
           <Title level={2} elementLevel={2}>
             {prize.title}
           </Title>
