@@ -1,4 +1,6 @@
 // Actions
+import { RESET } from '../constants';
+
 export const SET_CATEGORIES = 'party/categories/SET_CATEGORIES';
 
 export function setCategories(categories) {
@@ -18,6 +20,8 @@ export default function categories(state = initialState, action = { type: '' }) 
         ...state,
         ...action.categories,
       };
+    case RESET:
+      return { ...initialState };
     default:
       return state;
   }

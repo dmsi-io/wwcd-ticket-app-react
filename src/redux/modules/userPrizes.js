@@ -1,4 +1,6 @@
 // Actions
+import { RESET } from '../constants';
+
 export const SET_USER_PRIZES = 'party/userPrizes/SET_USER_PRIZES';
 export const UPDATE_USER_PRIZES = 'party/userPrizes/UPDATE_USER_PRIZES';
 
@@ -31,6 +33,8 @@ export default function categories(state = initialState, action = { type: '' }) 
         ...state,
         ...action.prizes,
       };
+    case RESET:
+      return { ...initialState };
     default:
       return state;
   }
