@@ -164,7 +164,11 @@ export default class Prize extends React.Component {
               this.setState({ ticketCount: Number.parseInt(ticketCount, 10) })
             }
           />
-          <Button domain="primary" onClick={this.commitTicket} disabled={ticketCount > remaining}>
+          <Button
+            domain="primary"
+            onClick={this.commitTicket}
+            disabled={ticketCount > remaining || ticketCount < 1}
+          >
             {`Add Ticket${ticketCount === 1 ? '' : 's'}`}
           </Button>
         </>
