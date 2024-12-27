@@ -210,7 +210,7 @@ export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, use
           </BadgeContainer>
         </>
       );
-    } else if (queryParams.view === 'all') {
+    } else if (queryParams.view !== 'mine') {
       return (
         <>
           <Text>Total Tickets in Bucket:</Text>
