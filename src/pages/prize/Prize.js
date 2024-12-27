@@ -213,12 +213,12 @@ export default class Prize extends React.Component {
             <div style={{ marginRight: 10, marginTop: '10px' }}>
               <Lozenge>{categories[prize.categoryId].name}</Lozenge>
             </div>
-            {prize.committedTickets && (
+            {prize.committedTickets > 0 && (
               <div style={{ marginRight: 10, marginTop: '10px' }}>
                 <Lozenge>Tickets in Bucket: {prize.committedTickets}</Lozenge>
               </div>
             )}
-            {prize.committedUsers && (
+            {prize.committedUsers > 0 && (
               <div style={{ marginRight: 10, marginTop: '10px' }}>
                 <Lozenge># of Users in Bucket: {prize.committedUsers}</Lozenge>
               </div>
