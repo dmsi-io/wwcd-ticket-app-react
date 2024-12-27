@@ -29,8 +29,8 @@ export const refresh =
   };
 
 export default (props) => (
-  <div style={{ display: 'flex', 'flex-direction': 'row' }}>
-    <Button key="refresh" onClick={refresh(props)} domain="primary" style={{ 'margin-right': 10 }}>
+  <div style={{ display: 'flex', flexDirection: 'row' }}>
+    <Button key="refresh" onClick={refresh(props)} domain="primary" style={{ marginRight: 10 }}>
       Refresh
     </Button>
     <Button key="logout" onClick={logout} domain="primary">
