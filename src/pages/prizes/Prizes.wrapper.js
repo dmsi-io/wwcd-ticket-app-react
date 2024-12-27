@@ -10,7 +10,7 @@ import { setCategories } from '../../redux/modules/categories';
 const mapStateToProps = (state) => ({
   categories: state.categories,
   prizes: Object.values(state.prizes),
-  ticketsRemaining: state.userInfo.ticketsRemaining,
+  ticketsRemaining: state.userInfo.tickets.remaining,
   userPrizes: Object.values(state.userPrizes).filter(
     (prize) => prize && prize.committedTickets > 0,
   ),

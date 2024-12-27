@@ -90,8 +90,17 @@ const sortAvgTickets = (ascending) => (a, b) => {
 
 export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, userPrizes }) => {
   const queryParams = qs.parse(history.location.search.replace('?', ''));
-
   const [sortOrder, setSortOrder] = useState(SORT_ORDER.NAME_ASC);
+  const categoryNames = [
+    'Electronics',
+    'Travel',
+    'Home',
+    'Events',
+    'Garage',
+    'Kitchen',
+    'Misc.',
+    'Outdoor',
+  ];
   const prizes = useMemo(() => {
     return (queryParams.view === 'mine' ? userPrizes : propPrizes).slice().sort(
       (() => {
@@ -133,7 +142,7 @@ export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, use
 
   const ScrollHeader = () => (
     <Layout.Grid columns={['minmax(0, 1fr)', 'minmax(0, max-content)']} areas={[]}>
-      <div style={{ 'margin-bottom': '12px' }}>
+      <div style={{ marginBottom: '12px' }}>
         <Title level={2} elementLevel={2}>
           {(() => {
             switch (queryParams.view) {
@@ -143,7 +152,7 @@ export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, use
                 return 'My Selections';
               default: {
                 if (queryParams.categoryId) {
-                  return categories[queryParams.categoryId].name;
+                  return categoryNames[queryParams.categoryId - 1];
                 } else {
                   return 'All Categories';
                 }
@@ -154,7 +163,7 @@ export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, use
       </div>
       {(queryParams.view !== 'categories' || !!queryParams.categoryId) && (
         <div
-          style={{ 'margin-bottom': '12px' }}
+          style={{ marginBottom: '12px' }}
           onClick={() =>
             setSortOrder(
               (o) =>
@@ -258,7 +267,7 @@ export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, use
                 </Text>
               </TabContainer>
               {queryParams.view === 'categories' || !queryParams.view ? (
-                <div style={{ 'padding-bottom': '10vh' }}>
+                <div style={{ paddingBottom: '10vh' }}>
                   <ScrollHeader />
                   {queryParams.categoryId ? (
                     <Layout.Grid
@@ -310,7 +319,7 @@ export default ({ categories, prizes: propPrizes, refresh, ticketsRemaining, use
                 <ScrollHeader />
               )}
               {(queryParams.view === 'all' || queryParams.view === 'mine') && (
-                <div style={{ 'padding-bottom': '10vh' }}>
+                <div style={{ paddingBottom: '10vh' }}>
                   <Layout.Grid
                     columns={['repeat(auto-fill, minmax(200px, 0.5fr))']}
                     areas={[]}

@@ -210,21 +210,21 @@ export default class Prize extends React.Component {
               'margin-top': '-10px',
             }}
           >
-            <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+            <div style={{ marginRight: 10, marginTop: '10px' }}>
               <Lozenge>{categories[prize.categoryId].name}</Lozenge>
             </div>
             {prize.committedTickets && (
-              <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+              <div style={{ marginRight: 10, marginTop: '10px' }}>
                 <Lozenge>Tickets in Bucket: {prize.committedTickets}</Lozenge>
               </div>
             )}
             {prize.committedUsers && (
-              <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+              <div style={{ marginRight: 10, marginTop: '10px' }}>
                 <Lozenge># of Users in Bucket: {prize.committedUsers}</Lozenge>
               </div>
             )}
             {prize.multiplier && prize.multiplier > 1 && (
-              <div style={{ 'margin-right': 10, 'margin-top': '10px' }}>
+              <div style={{ marginRight: 10, marginTop: '10px' }}>
                 <Lozenge>Drawings: {prize.multiplier}</Lozenge>
               </div>
             )}

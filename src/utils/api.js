@@ -15,7 +15,10 @@ const api = {
   get: (route, authNeeded) => {
     const url = `${BASE_URL}${route}`;
 
-    const headers = { authorization: authNeeded ? getToken() : undefined, cache: 'no-store' };
+    const headers = {
+      authorization: authNeeded ? getToken() : undefined,
+      cache: 'no-cache, no-store, must-revalidate',
+    };
 
     return fetch(url, { headers })
       .then((data) => data.json())
@@ -36,13 +39,18 @@ const api = {
     const url = `${BASE_URL}${route}`;
 
     const contentType = 'application/json';
+    const cacheControl = 'no-cache, no-store, must-revalidate';
 
     const headers = authNeeded
       ? {
           authorization: getToken(),
           'content-type': contentType,
+          'cache-control': cacheControl,
         }
-      : { 'content-type': contentType };
+      : {
+          'content-type': contentType,
+          'cache-control': cacheControl,
+        };
 
     return fetch(url, {
       body: JSON.stringify(body),
