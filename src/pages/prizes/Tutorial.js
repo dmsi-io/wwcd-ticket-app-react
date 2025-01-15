@@ -46,6 +46,16 @@ const Messages = styled.p`
   line-height: 1.5;
 `;
 
+const RefreshMessage = styled.p`
+  font-size: 16px;
+  font-weight: 600;
+  margin: 40px 10px 10px;
+  color: ${color.R700};
+  text-align: center;
+  white-space: pre-wrap;
+  line-height: 1.5;
+`;
+
 const Close = styled.button`
   font-weight: 600;
   color: ${color.N700};
@@ -68,6 +78,8 @@ const Close = styled.button`
 `;
 
 const messages = [`Welcome to the 2025 DMSi Holiday Party!`];
+const refreshMessage =
+  'Use the "Refresh" button in the top right corner to ensure you have the current prizes, ticket counts, etc.';
 
 const Tutorial = ({ onExit }) => {
   return (
@@ -77,6 +89,7 @@ const Tutorial = ({ onExit }) => {
           <Close onClick={() => onExit()}>&times;</Close>
         </ButtonRow>
         <Messages>{messages}</Messages>
+        <RefreshMessage>{refreshMessage}</RefreshMessage>
       </Container>
     </Overlay>
   );
